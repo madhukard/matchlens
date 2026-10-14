@@ -29,9 +29,9 @@ ruff check matchlens tests
 2. The match analyst uses an Agents SDK function tool to retrieve that evidence and creates structured claims.
 3. An evidence reviewer checks those claims against the same events.
 4. A narrative agent adapts the approved analysis for fans or analysts in English or Spanish.
-5. A second review checks the final narrative. Invalid event IDs or failed reviews stop publication.
+5. A second review checks the final narrative. Invalid event IDs or failed reviews stop publication. One correction attempt can use reviewer feedback; a second failure aborts the batch.
 
-Narratives are generated **offline**, then saved atomically. The public service exposes only read-only tools and never receives a model credential. Eight saved variants cover 55–65 minutes and the full match, two audiences, and two languages. Other windows return exact statistics with an explicit “AI not generated” message. Model review reduces errors but is not human verification.
+Narratives are generated **offline**, then saved atomically. Fully reviewed intermediate variants are cached under ignored `.local/reviewed/` so an interrupted batch can resume without publishing partial results. The public service exposes only read-only tools and never receives a model credential. Eight saved variants cover 55–65 minutes and the full match, two audiences, and two languages. Other windows return exact statistics with an explicit “AI not generated” message. Model review reduces errors but is not human verification.
 
 To regenerate with Azure, set `MATCHLENS_PROVIDER=azure`, `MATCHLENS_MODEL` to your deployment name, and `AZURE_OPENAI_ENDPOINT`. Supply `AZURE_OPENAI_API_KEY` through your secret manager, or use Azure identity with the appropriate inference role. For OpenAI, set `MATCHLENS_PROVIDER=openai` and `OPENAI_API_KEY`.
 
@@ -53,3 +53,5 @@ See [connection instructions](docs/connections.md), [current SDK research](docs/
 ## Boundaries and next steps
 
 This is a working synthetic-data demonstration, not a production match-data service. Real feeds need licensing, ingestion, provenance and retention controls. Authenticated tenant data needs OAuth and authorization before exposure. Arbitrary live questions need an authenticated generation job, rate limits and a budget policy. Keep future Dhisana integration behind an adapter; this repository and Azure resource group are independent.
+
+For a running server, execute `python scripts/smoke.py <MCP URL>`. To exercise the embedded bridge locally, start the app on port 8767 and run `python scripts/ui_harness.py`, then open http://127.0.0.1:8788. The harness is not included in the Azure image and does not substitute for acceptance testing in actual client products.

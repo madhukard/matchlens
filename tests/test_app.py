@@ -63,6 +63,8 @@ def test_mcp_discovery_invocation_and_resource(client):
     assert resource["mimeType"] == "text/html;profile=mcp-app"
     assert "ui/initialize" in resource["text"]
     assert "/app.js" not in resource["text"]
+    assert "/app.css" not in resource["text"]
+    assert "--bs-body-bg" in resource["text"]
 
 
 def test_mcp_rejects_bad_arguments(client):

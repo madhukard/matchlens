@@ -95,6 +95,7 @@ async def test_generation_retries_once_with_feedback_and_publishes_atomically(
 ):
     monkeypatch.setenv("MATCHLENS_PROVIDER", "openai")
     monkeypatch.setattr(intelligence, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(intelligence, "CACHE_DIR", tmp_path / "cache")
     client = SimpleNamespace(close=AsyncMock())
     monkeypatch.setattr(intelligence, "AsyncOpenAI", lambda **kwargs: client)
     monkeypatch.setattr(intelligence, "OpenAIResponsesModel", lambda **kwargs: "model")
@@ -111,6 +112,7 @@ async def test_generation_retries_once_with_feedback_and_publishes_atomically(
 async def test_failed_correction_preserves_previous_artifacts(monkeypatch, tmp_path):
     monkeypatch.setenv("MATCHLENS_PROVIDER", "openai")
     monkeypatch.setattr(intelligence, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(intelligence, "CACHE_DIR", tmp_path / "cache")
     (tmp_path / "insights.json").write_text("previous")
     client = SimpleNamespace(close=AsyncMock())
     monkeypatch.setattr(intelligence, "AsyncOpenAI", lambda **kwargs: client)

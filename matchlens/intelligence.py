@@ -3,6 +3,7 @@
 import asyncio
 import json
 import os
+from hashlib import sha256
 from pathlib import Path
 from typing import Literal
 
@@ -14,6 +15,7 @@ from pydantic import BaseModel, Field
 from matchlens.domain import MATCH_ID, snapshot
 
 DATA_DIR = Path(__file__).parent / "data"
+CACHE_DIR = Path(".local/reviewed")
 
 
 class Claim(BaseModel):
@@ -62,6 +64,9 @@ async def generate_analysis(
         "Use only supplied evidence. Do not invent possession, pressure, speed, xG, "
         "historical records, or causal certainty. Team coordinates are attack-normalized. "
         "Distinguish observations from tactical interpretations. Cite exact event IDs. "
+        "Headlines must state only a score or recorded event count. Never imply a causal "
+        "link in headlines. Do not connect events into attacking moves or possessions. "
+        "Prefer precise event counts and observations over storytelling. "
         "Check event timestamps before asserting sequence. Avoid causal or chronological "
         "language unless every cited event supports that exact ordering. "
     )
@@ -174,6 +179,25 @@ async def generate_artifacts() -> None:
         for audience in ("fan", "analyst"):
             for language in ("en", "es"):
                 for start, end in ((3300, 3900), (0, 5400)):
+                    cache_key = sha256(
+                        Path(__file__).read_bytes()
+                        + json.dumps(
+                            [
+                                snapshot(MATCH_ID, start, end),
+                                audience,
+                                language,
+                                provider,
+                                model_name,
+                            ],
+                            sort_keys=True,
+                        ).encode()
+                    ).hexdigest()
+                    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+                    cache_file = CACHE_DIR / (cache_key + ".json")
+                    if cache_file.exists():
+                        artifacts.append(json.loads(cache_file.read_text()))
+                        print(f"Reused reviewed {audience}/{language}/{start}", flush=True)
+                        continue
                     feedback = ""
                     for attempt in range(2):
                         try:
@@ -189,6 +213,7 @@ async def generate_artifacts() -> None:
                     print(f"Reviewed {audience}/{language}/{start}-{end}", flush=True)
                     artifact["model"] = model_name
                     artifact["provider"] = provider
+                    cache_file.write_text(json.dumps(artifact, ensure_ascii=False))
                     artifacts.append(artifact)
         DATA_DIR.mkdir(exist_ok=True)
         temp = DATA_DIR / "insights.tmp"

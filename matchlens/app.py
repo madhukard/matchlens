@@ -34,7 +34,7 @@ def html_bundle() -> str:
         (WEB / "index.html")
         .read_text()
         .replace(
-            '<link rel="stylesheet" href="/app.css">',
+            '<link rel="stylesheet" href="/app.css" />',
             "<style>" + (WEB / "app.css").read_text() + "</style>",
         )
         .replace(

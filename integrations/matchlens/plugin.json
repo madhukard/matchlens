@@ -14,9 +14,7 @@
         "longDescription": "Explore fictional match events, replay a pitch sequence, compare exact statistics and read reviewed GPT-6 narratives for fans or analysts. All data in this demo is synthetic.",
         "developerName": "Dhisana AI",
         "category": "Productivity",
-        "capabilities": [
-          "Interactive"
-        ],
+        "capabilities": ["Interactive"],
         "defaultPrompt": "Show the MatchLens demo and explain the 55\u201365 minute window.",
         "logo": "./assets/icon.svg",
         "composerIcon": "./assets/icon.svg",
