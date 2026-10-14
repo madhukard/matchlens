@@ -2,7 +2,7 @@
 
 An evidence-first football match room: an interactive pitch, event replay, exact statistics, and reviewed AI narratives. Built with the **OpenAI Agents SDK**, **MCP Apps**, and **Azure**.
 
-**[Open the live demo](https://matchlens-dev.redforest-787f42f7.westus2.azurecontainerapps.io)** · **[Open the private ChatGPT plugin](https://chatgpt.com/plugins/plugins_6acfdfe899388191af6dc5741e611de1)**
+**[Watch the 1:53 demo](https://www.youtube.com/watch?v=qdtIEEIp8bE)** · **[Open the live demo](https://matchlens-dev.redforest-787f42f7.westus2.azurecontainerapps.io)** · **[Open the private ChatGPT plugin](https://chatgpt.com/plugins/plugins_6acfdfe899388191af6dc5741e611de1)**
 
 ![MatchLens corrected-goal evidence view](docs/preview.png)
 

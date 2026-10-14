@@ -2,6 +2,8 @@
 
 **Category: Best Multi-Agent System**
 
+[Demo video (1:53)](https://www.youtube.com/watch?v=qdtIEEIp8bE) · [Public source](https://github.com/madhukard/matchlens) · [Working application](https://matchlens-dev.redforest-787f42f7.westus2.azurecontainerapps.io)
+
 A goal is reported. Seconds later, the event feed corrects it. The scoreboard is easy to fix; the AI story, translated summary and supporting citations can remain confidently wrong.
 
 MatchLens makes that correction a first-class part of match intelligence. It reconciles versioned synthetic football events, computes the score and counts, and hands one evidence snapshot to four specialist agents built with the OpenAI Agents SDK. The match analyst selects the story and useful view. An evidence critic challenges its interpretation. An audience editor writes for fans and analysts in English and Spanish. A broadcast verifier checks every version before publication.

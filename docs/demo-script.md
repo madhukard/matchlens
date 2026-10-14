@@ -17,3 +17,7 @@ End with the public repository and demo links only after publication is approved
 ## Recorded artifact
 
 `dist/matchlens-demo.mp4` is 1:53, 1920×1080, H.264 with English captions and no audio. It starts with a labelled replay still of the reported goal, followed by actual screen capture of the Azure correction review and audience controls. The last trace frame is held for the evaluation caption. No generation latency is sped up or represented as subsecond. Extracted opening, correction and closing frames were visually inspected. Publication remains an owner action/approval.
+
+## Published demo
+
+[Watch on YouTube](https://www.youtube.com/watch?v=qdtIEEIp8bE). Published publicly on 14 October 2026 with owner authorization. The watch page reports 1:53 and playback was verified.
