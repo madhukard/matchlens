@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "matchlens"
+version = "0.1.0"
+description = "Evidence-first football intelligence through MCP and Azure"
+requires-python = ">=3.12"
+dependencies = ["openai-agents==0.23.1", "openai==3.31.0", "mcp==2.3.0", "fastapi==0.143.1", "azure-identity==1.26.0", "uvicorn==0.54.0"]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1", "pytest-asyncio==1.4.0", "httpx==0.28.1", "ruff==0.17.0"]
+
+[tool.setuptools.package-data]
+matchlens = ["web/*", "data/*.json"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.setuptools.packages.find]
+include = ["matchlens*"]

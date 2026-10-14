@@ -1,0 +1,8 @@
+*
+!Dockerfile
+!requirements.lock
+!pyproject.toml
+!matchlens
+!matchlens/**
+matchlens/**/__pycache__
+matchlens/**/*.pyc

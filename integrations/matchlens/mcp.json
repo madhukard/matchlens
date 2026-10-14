@@ -1,0 +1,16 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "matchlens": {
+      "type": "streamable-http",
+      "url": "https://matchlens-dev.agreeablemushroom-147a503e.eastus.azurecontainerapps.io/mcp",
+      "extensions": {
+        "com.openai": {
+          "auth": {
+            "type": "none"
+          }
+        }
+      }
+    }
+  }
+}

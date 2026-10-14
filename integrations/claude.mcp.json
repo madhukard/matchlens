@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "matchlens": {
+      "type": "http",
+      "url": "https://matchlens-dev.agreeablemushroom-147a503e.eastus.azurecontainerapps.io/mcp"
+    }
+  }
+}
