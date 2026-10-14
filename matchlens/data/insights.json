@@ -1,0 +1,606 @@
+[
+  {
+    "analysis": {
+      "headline": "Recorded events: Harbor FC 15, Summit United 4",
+      "claims": [
+        {
+          "text": "Harbor completed all nine recorded passes; each advanced 14 metres in attack-normalized x coordinates.",
+          "evidence_event_ids": [
+            "e-3405",
+            "e-3450",
+            "e-3495",
+            "e-3540",
+            "e-3585",
+            "e-3630",
+            "e-3675",
+            "e-3720",
+            "e-3765"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "The clearest spatial pattern is repetition: Harbor’s three recorded recoveries were all at (78, 24), and its three shot events were all from (91, 30). One of those shot events was a goal.",
+          "evidence_event_ids": [
+            "r-3420",
+            "r-3560",
+            "r-3730",
+            "s-3460",
+            "s-3610",
+            "s-3780"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "Summit completed two of four recorded passes; the other two were unsuccessful.",
+          "evidence_event_ids": [
+            "e-3315",
+            "e-3360",
+            "e-3810",
+            "e-3855"
+          ],
+          "interpretation": false
+        }
+      ],
+      "uncertainty": "These are selected synthetic on-ball events, not a complete tracking feed. Their repeated locations do not establish possessions, pressure, or a causal link between recoveries and shots.",
+      "recommended_view": "pitch"
+    },
+    "narrative": {
+      "headline": "Recorded events: Harbor FC 15, Summit United 4",
+      "summary": "Harbor completed all nine recorded passes, each advancing 14 metres in attack-normalized x coordinates. Its three recorded recoveries were all at (78, 24), and its three shots were all from (91, 30); one shot was a goal. Summit completed two of four recorded passes. These selected synthetic on-ball events are not a complete tracking feed. The repeated locations do not establish possessions, pressure, or a causal link between recoveries and shots.",
+      "evidence_event_ids": [
+        "e-3405",
+        "e-3450",
+        "e-3495",
+        "e-3540",
+        "e-3585",
+        "e-3630",
+        "e-3675",
+        "e-3720",
+        "e-3765",
+        "r-3420",
+        "r-3560",
+        "r-3730",
+        "s-3460",
+        "s-3610",
+        "s-3780",
+        "e-3315",
+        "e-3360",
+        "e-3810",
+        "e-3855"
+      ]
+    },
+    "audience": "fan",
+    "language": "en",
+    "source": "agents_sdk",
+    "review": "Two model reviews passed; not a human verification guarantee.",
+    "window": {
+      "start_second": 3300,
+      "end_second": 3900
+    },
+    "model": "gpt-6-sol",
+    "provider": "azure"
+  },
+  {
+    "analysis": {
+      "headline": "Harbor FC 2–1 Summit United",
+      "claims": [
+        {
+          "text": "The clearest pattern is a concentration of recorded Harbor events: all three high recoveries were at (78, 24), at 57:00, 59:20 and 62:10.",
+          "evidence_event_ids": [
+            "r-3420",
+            "r-3560",
+            "r-3730"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "Harbor recorded four shots: two unsuccessful shots at 57:40 and 60:10, and goals at 63:00 and 82:00. Summit’s one recorded shot was a goal at 28:00.",
+          "evidence_event_ids": [
+            "s-3460",
+            "s-3610",
+            "s-3780",
+            "s-4920",
+            "s-1680"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "The recoveries and three of Harbor’s shots fall within a roughly six-minute interval, but their timing alone does not show that any recovery led to a shot.",
+          "evidence_event_ids": [
+            "r-3420",
+            "s-3460",
+            "r-3560",
+            "s-3610",
+            "r-3730",
+            "s-3780"
+          ],
+          "interpretation": true
+        }
+      ],
+      "uncertainty": "These are selected synthetic on-ball events, not a complete tracking feed. They do not establish possessions, attacking moves, pressure or causal links between events.",
+      "recommended_view": "timeline"
+    },
+    "narrative": {
+      "headline": "Harbor FC 2–1 Summit United",
+      "summary": "Harbor recorded three high recoveries, all at (78, 24): 57:00 (r-3420), 59:20 (r-3560) and 62:10 (r-3730). Its four recorded shots were two unsuccessful attempts at 57:40 (s-3460) and 60:10 (s-3610), plus goals at 63:00 (s-3780) and 82:00 (s-4920). Summit’s one recorded shot was a goal at 28:00 (s-1680). All three recoveries and three of Harbor’s shots were recorded between 57:00 and 63:00, but these selected events do not show whether any recovery led to a shot.",
+      "evidence_event_ids": [
+        "r-3420",
+        "r-3560",
+        "r-3730",
+        "s-3460",
+        "s-3610",
+        "s-3780",
+        "s-4920",
+        "s-1680"
+      ]
+    },
+    "audience": "fan",
+    "language": "en",
+    "source": "agents_sdk",
+    "review": "Two model reviews passed; not a human verification guarantee.",
+    "window": {
+      "start_second": 0,
+      "end_second": 5400
+    },
+    "model": "gpt-6-sol",
+    "provider": "azure"
+  },
+  {
+    "analysis": {
+      "headline": "Harbor FC: 3 shots, 3 high recoveries",
+      "claims": [
+        {
+          "text": "All three Harbor shots were recorded at (91, 30); the third was a goal.",
+          "evidence_event_ids": [
+            "s-3460",
+            "s-3610",
+            "s-3780"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "Harbor’s three high recoveries were each recorded at (78, 24).",
+          "evidence_event_ids": [
+            "r-3420",
+            "r-3560",
+            "r-3730"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "Harbor completed all nine recorded passes in the window; Summit completed two of four.",
+          "evidence_event_ids": [
+            "e-3405",
+            "e-3450",
+            "e-3495",
+            "e-3540",
+            "e-3585",
+            "e-3630",
+            "e-3675",
+            "e-3720",
+            "e-3765",
+            "e-3315",
+            "e-3360",
+            "e-3810",
+            "e-3855"
+          ],
+          "interpretation": false
+        }
+      ],
+      "uncertainty": "These are selected synthetic on-ball events, not a complete tracking feed. The repeated locations do not establish how the shots or recoveries arose, and pass completion does not measure possession.",
+      "recommended_view": "pitch"
+    },
+    "narrative": {
+      "headline": "Harbor FC: 3 tiros y 3 recuperaciones altas",
+      "summary": "Los tres tiros de Harbor se registraron en (91, 30); uno fue gol (s-3460, s-3610, s-3780). Sus tres recuperaciones altas se registraron en (78, 24) (r-3420, r-3560, r-3730). En los pases registrados, Harbor completó 9 de 9 y Summit, 2 de 4. Son eventos sintéticos seleccionados, no un registro completo: las ubicaciones repetidas no muestran cómo se produjeron los tiros o las recuperaciones, y los pases completados no miden la posesión.",
+      "evidence_event_ids": [
+        "s-3460",
+        "s-3610",
+        "s-3780",
+        "r-3420",
+        "r-3560",
+        "r-3730",
+        "e-3405",
+        "e-3450",
+        "e-3495",
+        "e-3540",
+        "e-3585",
+        "e-3630",
+        "e-3675",
+        "e-3720",
+        "e-3765",
+        "e-3315",
+        "e-3360",
+        "e-3810",
+        "e-3855"
+      ]
+    },
+    "audience": "fan",
+    "language": "es",
+    "source": "agents_sdk",
+    "review": "Two model reviews passed; not a human verification guarantee.",
+    "window": {
+      "start_second": 3300,
+      "end_second": 3900
+    },
+    "model": "gpt-6-sol",
+    "provider": "azure"
+  },
+  {
+    "analysis": {
+      "headline": "Harbor FC 2–1 Summit United",
+      "claims": [
+        {
+          "text": "Harbor recorded four shots, including goals at 63:00 and 82:00. Summit recorded one shot, a goal at 28:00.",
+          "evidence_event_ids": [
+            "s-3460",
+            "s-3610",
+            "s-3780",
+            "s-4920",
+            "s-1680"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "All three recorded Harbor high recoveries were at the same attack-normalized coordinate, x=78, y=24, between 57:00 and 62:10.",
+          "evidence_event_ids": [
+            "r-3420",
+            "r-3560",
+            "r-3730"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "The most useful pattern is a concentration in time: those three recoveries and three of Harbor’s four shots were recorded between 57:00 and 63:00. This identifies a notable window, not a demonstrated connection between the events.",
+          "evidence_event_ids": [
+            "r-3420",
+            "r-3560",
+            "r-3730",
+            "s-3460",
+            "s-3610",
+            "s-3780",
+            "s-4920"
+          ],
+          "interpretation": true
+        }
+      ],
+      "uncertainty": "These are selected synthetic on-ball events, not a complete tracking feed. They do not establish possessions, pressure, or whether a recovery led to a shot.",
+      "recommended_view": "timeline"
+    },
+    "narrative": {
+      "headline": "Harbor FC 2–1 Summit United",
+      "summary": "Harbor registró cuatro tiros, incluidos los goles del 63:00 y el 82:00. Summit registró un tiro, que fue gol en el 28:00. Entre el 57:00 y el 63:00 se concentraron tres de los cuatro tiros de Harbor y sus tres recuperaciones altas registradas; estas últimas ocurrieron en la misma coordenada normalizada de ataque (x=78, y=24). Es una coincidencia temporal destacable, pero estos eventos seleccionados no permiten afirmar que alguna recuperación condujera a un tiro.",
+      "evidence_event_ids": [
+        "s-3460",
+        "s-3610",
+        "s-3780",
+        "s-4920",
+        "s-1680",
+        "r-3420",
+        "r-3560",
+        "r-3730"
+      ]
+    },
+    "audience": "fan",
+    "language": "es",
+    "source": "agents_sdk",
+    "review": "Two model reviews passed; not a human verification guarantee.",
+    "window": {
+      "start_second": 0,
+      "end_second": 5400
+    },
+    "model": "gpt-6-sol",
+    "provider": "azure"
+  },
+  {
+    "analysis": {
+      "headline": "Harbor FC: 9 recorded passes; Summit United: 4",
+      "claims": [
+        {
+          "text": "Harbor completed all nine recorded passes. Each advanced 14 metres in its attack-normalized direction; Summit completed two of four recorded passes.",
+          "evidence_event_ids": [
+            "e-3405",
+            "e-3450",
+            "e-3495",
+            "e-3540",
+            "e-3585",
+            "e-3630",
+            "e-3675",
+            "e-3720",
+            "e-3765",
+            "e-3315",
+            "e-3360",
+            "e-3810",
+            "e-3855"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "All three recorded Harbor recoveries were at the same plotted location, (78, 24). This is a notable spatial concentration in the selected events.",
+          "evidence_event_ids": [
+            "r-3420",
+            "r-3560",
+            "r-3730"
+          ],
+          "interpretation": true
+        },
+        {
+          "text": "Harbor recorded three shots, including one goal; Summit recorded no shots in this window.",
+          "evidence_event_ids": [
+            "s-3460",
+            "s-3610",
+            "s-3780"
+          ],
+          "interpretation": false
+        }
+      ],
+      "uncertainty": "These are selected illustrative on-ball events, not a complete feed. They do not establish possession, pressure, or a causal connection between recoveries, passes, and shots.",
+      "recommended_view": "comparison"
+    },
+    "narrative": {
+      "headline": "Harbor FC: 9 recorded passes; Summit United: 4",
+      "summary": "Harbor completed all nine recorded passes, each advancing 14 metres in its attack-normalized direction; Summit completed two of four. Harbor’s three recorded recoveries shared the plotted location (78, 24), a spatial concentration in these selected events. Harbor recorded three shots, including one goal; Summit had no recorded shots in this selection. These illustrative on-ball events are not a complete feed and do not establish possession, pressure, or a causal link between event types.",
+      "evidence_event_ids": [
+        "e-3405",
+        "e-3450",
+        "e-3495",
+        "e-3540",
+        "e-3585",
+        "e-3630",
+        "e-3675",
+        "e-3720",
+        "e-3765",
+        "e-3315",
+        "e-3360",
+        "e-3810",
+        "e-3855",
+        "r-3420",
+        "r-3560",
+        "r-3730",
+        "s-3460",
+        "s-3610",
+        "s-3780"
+      ]
+    },
+    "audience": "analyst",
+    "language": "en",
+    "source": "agents_sdk",
+    "review": "Two model reviews passed; not a human verification guarantee.",
+    "window": {
+      "start_second": 3300,
+      "end_second": 3900
+    },
+    "model": "gpt-6-sol",
+    "provider": "azure"
+  },
+  {
+    "analysis": {
+      "headline": "Harbor FC 2–1 Summit United",
+      "claims": [
+        {
+          "text": "Harbor recorded three high recoveries, all at attack-normalized x=78, between 57:00 and 62:10. It recorded three of its four shots between 57:40 and 63:00; its fourth was at 82:00.",
+          "evidence_event_ids": [
+            "r-3420",
+            "r-3560",
+            "r-3730",
+            "s-3460",
+            "s-3610",
+            "s-3780",
+            "s-4920"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "That concentration of recorded recoveries and shots is the clearest pattern in the window, but the events do not establish that any recovery produced a shot.",
+          "evidence_event_ids": [
+            "r-3420",
+            "r-3560",
+            "r-3730",
+            "s-3460",
+            "s-3610",
+            "s-3780"
+          ],
+          "interpretation": true
+        },
+        {
+          "text": "Summit's sole recorded shot was its goal at 28:00. Harbor's goals were recorded at 63:00 and 82:00.",
+          "evidence_event_ids": [
+            "s-1680",
+            "s-3780",
+            "s-4920"
+          ],
+          "interpretation": false
+        }
+      ],
+      "uncertainty": "This is a selected synthetic on-ball feed, not complete tracking. It cannot establish possessions, attacking moves, pressure, or why the shots occurred.",
+      "recommended_view": "timeline"
+    },
+    "narrative": {
+      "headline": "Harbor FC 2–1 Summit United",
+      "summary": "Harbor recorded three high recoveries, all at attack-normalized x=78, between 57:00 and 62:10. Three of its four shots were recorded between 57:40 and 63:00; the fourth was at 82:00. That concentration is the clearest pattern in the selected on-ball feed, but it does not establish that a recovery produced a shot. Summit’s sole recorded shot was its goal at 28:00; Harbor’s goals were at 63:00 and 82:00. The feed cannot establish possessions, pressure, or why the shots occurred.",
+      "evidence_event_ids": [
+        "r-3420",
+        "r-3560",
+        "r-3730",
+        "s-3460",
+        "s-3610",
+        "s-3780",
+        "s-4920",
+        "s-1680"
+      ]
+    },
+    "audience": "analyst",
+    "language": "en",
+    "source": "agents_sdk",
+    "review": "Two model reviews passed; not a human verification guarantee.",
+    "window": {
+      "start_second": 0,
+      "end_second": 5400
+    },
+    "model": "gpt-6-sol",
+    "provider": "azure"
+  },
+  {
+    "analysis": {
+      "headline": "Harbor FC 1–1 Summit United",
+      "claims": [
+        {
+          "text": "The clearest spatial pattern is Harbor’s three recorded recoveries, all at attack-normalized coordinates (78, 24).",
+          "evidence_event_ids": [
+            "r-3420",
+            "r-3560",
+            "r-3730"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "Harbor completed all nine recorded passes; each moved 14 metres toward the attacking goal along the x-axis.",
+          "evidence_event_ids": [
+            "e-3405",
+            "e-3450",
+            "e-3495",
+            "e-3540",
+            "e-3585",
+            "e-3630",
+            "e-3675",
+            "e-3720",
+            "e-3765"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "Harbor recorded three shots from (91, 30), including H9’s goal. The shared coordinates do not establish that the shots came from the same attacking move.",
+          "evidence_event_ids": [
+            "s-3460",
+            "s-3610",
+            "s-3780"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "Together, the forward passes and advanced recoveries suggest Harbor had activity in attacking areas, but do not measure possession or pressure.",
+          "evidence_event_ids": [
+            "e-3405",
+            "e-3450",
+            "e-3495",
+            "e-3540",
+            "e-3585",
+            "e-3630",
+            "e-3675",
+            "e-3720",
+            "e-3765",
+            "r-3420",
+            "r-3560",
+            "r-3730"
+          ],
+          "interpretation": true
+        }
+      ],
+      "uncertainty": "This is a selected synthetic on-ball feed, not complete tracking. The events cannot establish possession, pressure, or links between passes, recoveries and shots.",
+      "recommended_view": "pitch"
+    },
+    "narrative": {
+      "headline": "Harbor FC 1–1 Summit United",
+      "summary": "Harbor registró tres recuperaciones en (78, 24), completó los nueve pases registrados —cada uno avanzó 14 metros hacia la portería rival sobre el eje x— y realizó tres disparos desde (91, 30), incluido el gol de H9. Los pases hacia delante y las recuperaciones en zona avanzada sugieren actividad en áreas de ataque, pero no miden posesión ni presión. Se trata de una selección sintética de eventos con balón, no de un seguimiento completo: las coordenadas compartidas no demuestran que los disparos pertenecieran a la misma jugada ni permiten vincular pases, recuperaciones y disparos.",
+      "evidence_event_ids": [
+        "r-3420",
+        "r-3560",
+        "r-3730",
+        "e-3405",
+        "e-3450",
+        "e-3495",
+        "e-3540",
+        "e-3585",
+        "e-3630",
+        "e-3675",
+        "e-3720",
+        "e-3765",
+        "s-3460",
+        "s-3610",
+        "s-3780"
+      ]
+    },
+    "audience": "analyst",
+    "language": "es",
+    "source": "agents_sdk",
+    "review": "Two model reviews passed; not a human verification guarantee.",
+    "window": {
+      "start_second": 3300,
+      "end_second": 3900
+    },
+    "model": "gpt-6-sol",
+    "provider": "azure"
+  },
+  {
+    "analysis": {
+      "headline": "Harbor FC 2–1 Summit United",
+      "claims": [
+        {
+          "text": "Harbor recorded four shots to Summit's one. Harbor's goals are recorded at 63 and 82 minutes; Summit's at 28 minutes.",
+          "evidence_event_ids": [
+            "s-3460",
+            "s-3610",
+            "s-3780",
+            "s-4920",
+            "s-1680"
+          ],
+          "interpretation": false
+        },
+        {
+          "text": "The clearest pattern is a concentration of Harbor events between 57 and 63 minutes: three high recoveries, all at attacking-normalized x=78, and three shots. These are separate recorded events, not established attacking moves.",
+          "evidence_event_ids": [
+            "r-3420",
+            "r-3560",
+            "r-3730",
+            "s-3460",
+            "s-3610",
+            "s-3780"
+          ],
+          "interpretation": true
+        },
+        {
+          "text": "Harbor completed 55 of 61 recorded passes (90.2%); Summit completed 47 of 59 (79.7%).",
+          "evidence_event_ids": [
+            "e-3450",
+            "e-3585",
+            "e-3765",
+            "e-3810",
+            "e-3855"
+          ],
+          "interpretation": false
+        }
+      ],
+      "uncertainty": "This is a selected synthetic on-ball feed, not complete tracking. The timing of recoveries and shots does not establish that one caused another; possession, pressure and xG are not measured. Pass totals come from the supplied window statistics, not solely from the cited illustrative events.",
+      "recommended_view": "timeline"
+    },
+    "narrative": {
+      "headline": "Harbor FC 2–1 Summit United",
+      "summary": "Harbor registró cuatro tiros y Summit, uno. Los goles de Harbor figuran en los minutos 63 y 82; el de Summit, en el 28 (s-3460, s-3610, s-3780, s-4920, s-1680). Entre los minutos 57 y 63 se concentran seis eventos registrados de Harbor: tres recuperaciones altas, todas en x=78 con coordenadas normalizadas al ataque, y tres tiros (r-3420, r-3560, r-3730, s-3460, s-3610, s-3780). Son eventos separados: su proximidad temporal no demuestra que formen una misma jugada ni que unos causaran otros. Harbor completó 55 de 61 pases registrados (90,2 %) y Summit, 47 de 59 (79,7 %). Estos totales proceden de las estadísticas de la ventana suministrada, no solo de los eventos ilustrativos citados (e-3450, e-3585, e-3765, e-3810, e-3855). La fuente es una selección sintética de eventos con balón, no un seguimiento completo; no mide posesión, presión ni xG.",
+      "evidence_event_ids": [
+        "s-3460",
+        "s-3610",
+        "s-3780",
+        "s-4920",
+        "s-1680",
+        "r-3420",
+        "r-3560",
+        "r-3730",
+        "e-3450",
+        "e-3585",
+        "e-3765",
+        "e-3810",
+        "e-3855"
+      ]
+    },
+    "audience": "analyst",
+    "language": "es",
+    "source": "agents_sdk",
+    "review": "Two model reviews passed; not a human verification guarantee.",
+    "window": {
+      "start_second": 0,
+      "end_second": 5400
+    },
+    "model": "gpt-6-sol",
+    "provider": "azure"
+  }
+]
