@@ -12,7 +12,10 @@ async def check(url: str) -> None:
         async with ClientSession(read, write) as session:
             await session.initialize()
             tools = await session.list_tools()
-            assert len(tools.tools) == 6
+            assert len(tools.tools) == 9
+            live = await session.call_tool("get_live_match", {})
+            assert not live.is_error
+            assert live.structured_content["match"]["synthetic"]
             result = await session.call_tool("explain_moment", {})
             assert not result.is_error
             data = result.structured_content
@@ -23,9 +26,7 @@ async def check(url: str) -> None:
             assert "ui/initialize" in resource.contents[0].text
             bad = await session.call_tool("get_match_snapshot", {"match_id": "unknown"})
             assert bad.is_error
-            print(
-                f"PASS: tools, evidence, UI and validation; source={data['insight']['source']}"
-            )
+            print(f"PASS: tools, evidence, UI and validation; source={data['insight']['source']}")
 
 
 if __name__ == "__main__":

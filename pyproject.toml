@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "matchlens"
-version = "0.1.0"
+version = "0.2.0"
 description = "Evidence-first football intelligence through MCP and Azure"
 requires-python = ">=3.12"
-dependencies = ["openai-agents==0.23.1", "openai==3.31.0", "mcp==2.3.0", "fastapi==0.143.1", "azure-identity==1.26.0", "uvicorn==0.54.0"]
+dependencies = ["openai-agents==0.23.1", "openai==3.31.0", "mcp==2.3.0", "fastapi==0.143.1", "azure-identity==1.26.0", "uvicorn==0.54.0", "azure-storage-blob==12.31.0"]
 
 [project.optional-dependencies]
 dev = ["pytest==9.1.1", "pytest-asyncio==1.4.0", "httpx==0.28.1", "ruff==0.17.0"]

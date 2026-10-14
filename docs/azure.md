@@ -4,9 +4,9 @@ The first deployment uses the same subscription as Dhisana, **Dhisana AI Develop
 
 Resources:
 
-- `matchlens-dev-ai-1f5dc8`: separate Azure OpenAI account; `gpt-6-sol` version `2026-09-22`, GlobalStandard, capacity 10. Used for offline synthetic narrative generation only.
+- `matchlens-dev-ai-1f5dc8`: separate Azure OpenAI account; `gpt-6-sol` version `2026-09-22`, GlobalStandard, capacity 60. Used by the authenticated manual synthetic-stream worker.
 - `matchlensdev1f5dc8`: Basic Container Registry, admin password disabled.
-- `matchlens-dev-runtime`: managed identity with AcrPull scoped to that new registry only.
+- `matchlens-dev-runtime`: managed identity with AcrPull on the new registry and Blob Data Reader on the private run container.
 - `matchlens-dev-env-west`: consumption Container Apps environment in westus2.
 - `matchlens-dev`: HTTPS app, 0–1 replica, 0.25 CPU and 0.5 GiB RAM. Contains saved demo artifacts, no model credentials.
 
@@ -28,4 +28,26 @@ The public `/mcp` and preview expose fictional demo data only. Tools cannot invo
 
 For rollback, redeploy `infra/app.bicep` with a previously tested immutable image tag. Health is `/health`; MCP is `/mcp`. A cold start is possible at zero replicas. To retire the demo, review and remove only `matchlens-dev-rg` through your normal Azure process; never run cleanup against a Dhisana group.
 
-The initial eastus serving environment remained queued. A separate westus2 environment successfully provisioned, and deletion of the unused eastus environment was requested. It last reported `ScheduledForDelete`; Azure has not yet confirmed deletion. This was contained within the new MatchLens resource group.
+The initial eastus serving environment remained queued and was retired after westus2 provisioned successfully. The 14 October resource inventory no longer lists the unused eastus environment. This was contained within the new MatchLens resource group.
+
+## Live worker operations
+
+`infra/live.bicep` provisions private storage `matchlenslive1f5dc8` and separate worker identity `matchlens-dev-worker`. `infra/worker.bicep` provisions manual job `matchlens-live-worker` (1,200-second timeout, no automatic job retry). Only this identity has the MatchLens inference role and write access to its run container. A renewable blob lease rejects concurrent publishers.
+
+Deploy without starting generation:
+
+```sh
+MATCHLENS_IMAGE_TAG=<unique-release-tag> bash scripts/deploy_live.sh
+```
+
+Start one bounded synthetic run with the authorized Azure operator account:
+
+```sh
+az containerapp job start --subscription "$MATCHLENS_SUBSCRIPTION" --resource-group matchlens-dev-rg --name matchlens-live-worker
+```
+
+Watch execution state and inspect `/api/run` for frame status, evidence and trace. A successful job exit alone does not mean every narrative passed review: inspect all six frames. Do not run evaluation concurrently with this job; both consume the same model quota. No automatic schedule or public generation trigger exists.
+
+Generation reserves up to 600,000 conservative tokens / 48 calls per stream. A four-case paired evaluation reserves up to 1,200,000 / 64 calls, including advisory graders. These reservations and the 60,000 tokens/minute model throughput limit are different controls. Neither establishes a monthly dollar cap. Failed calls may still consume quota; each explicit retry reserves budget again.
+
+For a hung execution, use the Azure job's stop operation scoped to `matchlens-live-worker` and the exact execution name. Do not delete or modify any Dhisana resources. A bundled recorded run supports read-only judging when Blob retrieval is unavailable and is labelled as a recording.

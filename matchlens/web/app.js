@@ -1,5 +1,8 @@
 const $ = (id) => document.getElementById(id);
 const state = {
+  live: true,
+  frame: -1,
+  polling: null,
   audience: "fan",
   language: "en",
   start: 3300,
@@ -16,8 +19,20 @@ let hostReady = false;
 const fmt = (seconds) =>
   `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 const labels = {
-  en: { pass: "Pass", recovery: "Recovery", shot: "Shot", goal: "Goal" },
-  es: { pass: "Pase", recovery: "Recuperación", shot: "Disparo", goal: "Gol" },
+  en: {
+    pass: "Pass",
+    recovery: "Recovery",
+    shot: "Shot",
+    goal: "Goal",
+    pressure: "Pressure",
+  },
+  es: {
+    pass: "Pase",
+    recovery: "Recuperación",
+    shot: "Disparo",
+    goal: "Gol",
+    pressure: "Presión",
+  },
 };
 function rpc(method, params) {
   return new Promise((resolve, reject) => {
@@ -102,27 +117,53 @@ function showError(error) {
   $("error").hidden = false;
   $("error").textContent = error.message || String(error);
 }
-async function load() {
+async function load(background = false) {
   const request = ++state.request;
   $("error").hidden = true;
-  stop();
+  if (!background) stop();
   try {
-    const data = await tool("explain_moment", {
-      match_id: "harbor-summit-demo",
-      start_second: state.start,
-      end_second: state.end,
-      audience: state.audience,
-      language: state.language,
-    });
-    if (request === state.request) accept(data);
+    const data = await tool(
+      state.live ? "get_live_match" : "explain_moment",
+      state.live
+        ? {
+            frame: state.frame,
+            audience: state.audience,
+            language: state.language,
+          }
+        : {
+            match_id: "harbor-summit-demo",
+            start_second: state.start,
+            end_second: state.end,
+            audience: state.audience,
+            language: state.language,
+          },
+    );
+    if (request === state.request) {
+      if (
+        background &&
+        data.live?.run_id === state.data?.live?.run_id &&
+        data.live?.updated_at === state.data?.live?.updated_at
+      ) {
+        state.polling = setTimeout(
+          () => load(true),
+          data.live.status === "running" ? 5000 : 15000,
+        );
+      } else accept(data);
+    }
   } catch (error) {
-    if (request === state.request) showError(error);
+    if (request === state.request) {
+      showError(error);
+      if (background && state.live && state.frame === -1)
+        state.polling = setTimeout(() => load(true), 15000);
+    }
   }
 }
 function accept(data) {
   if (!data?.match || !Array.isArray(data.events)) return;
   stop();
+  state.live = Boolean(data.live);
   state.data = data;
+  clearTimeout(state.polling);
   state.start = data.window.start_second;
   state.end = data.window.end_second;
   if (data.insight) {
@@ -170,7 +211,17 @@ function accept(data) {
     const block = document.createElement("div");
     block.className = "metric";
     const caption = document.createElement("span");
-    caption.textContent = label;
+    caption.textContent =
+      state.language === "es"
+        ? {
+            Shots: "Disparos",
+            "High recoveries": "Recuperaciones altas",
+            "Goals in window": "Goles del intervalo",
+            "Completed passes": "Pases completos",
+            "Pass accuracy %": "Precisión de pase %",
+            "Progressive passes": "Pases progresivos",
+          }[label] || label
+        : label;
     const number = document.createElement("strong");
     number.textContent = `${data.stats.harbor[key] ?? "—"} / ${data.stats.summit[key] ?? "—"}`;
     const legend = document.createElement("small");
@@ -179,7 +230,9 @@ function accept(data) {
     $("metrics").append(block);
   }
   const oldPlayer = $("player").value;
-  $("player").replaceChildren(new Option("All players", "all"));
+  $("player").replaceChildren(
+    new Option(state.language === "es" ? "Todos" : "All players", "all"),
+  );
   for (const player of [...new Set(data.events.map((e) => e.player))].sort())
     $("player").add(new Option(player, player));
   $("player").value = [...$("player").options].some(
@@ -194,17 +247,25 @@ function accept(data) {
   const evidence = data.events.filter((e) => ids.has(e.event_id));
   $("evidence-count").textContent = String(evidence.length);
   $("evidence-list").replaceChildren();
-  for (const event of evidence.slice(0, 6))
+  for (const event of evidence)
     $("evidence-list").append(eventButton(event, true));
   if (!evidence.length) {
     const note = document.createElement("p");
     note.className = "muted";
     note.textContent =
-      "No reviewed narrative for this window. Browse the events below.";
+      insight?.source === "agents_sdk"
+        ? state.language === "es"
+          ? "Esta explicación cita recuentos agregados. Consulta las estadísticas."
+          : "This explanation cites aggregate counts. See the match statistics."
+        : state.language === "es"
+          ? "Aún no hay una explicación revisada. Explora los eventos."
+          : "No reviewed narrative for this window. Browse the events below.";
     $("evidence-list").append(note);
   }
   $("show-evidence").disabled = !evidence.length;
   state.selected = evidence[0] || data.events.at(-1) || null;
+  if (state.selected) $("time").value = state.selected.second;
+  renderLive(data);
   renderEvents();
   updateContext();
 }
@@ -215,7 +276,7 @@ function eventButton(event, evidence = false) {
   const minute = document.createElement("strong");
   minute.textContent = fmt(event.second);
   const caption = document.createElement("span");
-  caption.textContent = `${labels[state.language][event.kind]} · ${event.player}`;
+  caption.textContent = `${labels[state.language][event.kind]} · ${event.player}${event.void ? (state.language === "es" ? " · anulado" : " · voided") : ""}`;
   const id = document.createElement("small");
   id.textContent = event.event_id;
   caption.append(id);
@@ -233,7 +294,8 @@ function renderEvents() {
     (e) => $("player").value === "all" || e.player === $("player").value,
   );
   $("timeline").replaceChildren(...visible.map((e) => eventButton(e)));
-  $("event-count").textContent = `${visible.length} recorded events`;
+  $("event-count").textContent =
+    `${visible.length} ${state.language === "es" ? "eventos registrados" : "recorded events"}`;
   if (state.selected && !visible.includes(state.selected))
     state.selected = visible[0] || null;
   draw();
@@ -310,7 +372,7 @@ function draw() {
     text.textContent = event.player;
     group.append(text);
     $("event-caption").textContent =
-      `${fmt(event.second)} · ${labels[state.language][event.kind]} · ${event.player}${event.successful ? "" : " · incomplete"}`;
+      `${fmt(event.second)} · ${labels[state.language][event.kind]} · ${event.player}${event.void ? (state.language === "es" ? " · anulado" : " · voided") : event.successful ? "" : state.language === "es" ? " · sin éxito" : " · unsuccessful"}`;
   } else
     $("event-caption").textContent =
       "No events at this point in the selected window";
@@ -321,7 +383,10 @@ function updateContext() {
   if (!hostReady) return;
   rpc("ui/update-model-context", {
     structuredContent: {
-      match_id: "harbor-summit-demo",
+      match_id: state.data?.match?.match_id || "harbor-summit-demo",
+      run_id: state.data?.live?.run_id,
+      frame: state.data?.live?.frame,
+      evidence_hash: state.data?.evidence_hash,
       window: { start_second: state.start, end_second: state.end },
       audience: state.audience,
       language: state.language,
@@ -335,6 +400,227 @@ function stop() {
   $("play").textContent = "▶";
   $("play").setAttribute("aria-label", "Play event replay");
 }
+const words = {
+  en: {
+    tagline: "FOOTBALL, EXPLAINED.",
+    title: "There’s more to the score.",
+    intro: "Follow the moments. Explore the evidence. Understand the game.",
+    home: "HOME",
+    away: "AWAY",
+    language: "Language",
+    focus: "Focus",
+    support: "Supporting moments",
+    timeline: "Match timeline",
+    explore: "Explore the sequence",
+    dataNote:
+      "Synthetic on-ball events and authored pressure tags. Counts are not possession, xG or proof of causality.",
+    reviewNote:
+      "Evidence IDs connect explanations to versioned events. Model review does not guarantee correctness.",
+    moment: "Moment",
+    watch: "Watch latest",
+    pitch: "Pitch",
+    comparison: "Before / after",
+    sequence: "Sequence",
+    checked: "How this was checked",
+    latest: "Latest update",
+    fan: "Fan view",
+    analyst: "Analyst view",
+    why: "Show me why ↗",
+    stages: [
+      "Opening control",
+      "First chance",
+      "Late event arrives",
+      "Pressure and recovery",
+      "Goal reported",
+      "Goal corrected",
+    ],
+  },
+  es: {
+    tagline: "EL FÚTBOL, EXPLICADO.",
+    title: "Hay más que el marcador.",
+    intro: "Sigue los momentos. Explora la evidencia. Entiende el partido.",
+    home: "LOCAL",
+    away: "VISITANTE",
+    language: "Idioma",
+    focus: "Enfoque",
+    support: "Momentos de apoyo",
+    timeline: "Cronología del partido",
+    explore: "Explora la secuencia",
+    dataNote:
+      "Eventos sintéticos y etiquetas de presión creadas para la demostración. Los recuentos no son posesión, xG ni prueba de causalidad.",
+    reviewNote:
+      "Los identificadores enlazan las explicaciones con eventos versionados. La revisión del modelo no garantiza la exactitud.",
+    moment: "Momento",
+    watch: "Ver lo último",
+    pitch: "Campo",
+    comparison: "Antes / después",
+    sequence: "Secuencia",
+    checked: "Cómo se verificó",
+    latest: "Última actualización",
+    fan: "Afición",
+    analyst: "Análisis",
+    why: "Muéstrame por qué ↗",
+    stages: [
+      "Control inicial",
+      "Primera ocasión",
+      "Llega un evento tardío",
+      "Presión y recuperación",
+      "Gol registrado",
+      "Gol corregido",
+    ],
+  },
+};
+function setView(view) {
+  if (!["pitch", "comparison", "timeline"].includes(view)) view = "pitch";
+  document.querySelector(".pitch-wrap").hidden = view !== "pitch";
+  $("comparison-panel").hidden = view !== "comparison";
+  $("sequence-panel").hidden = view !== "timeline";
+  for (const name of ["pitch", "comparison", "timeline"])
+    $("view-" + name).setAttribute("aria-pressed", String(name === view));
+}
+function renderLive(data) {
+  const es = state.language === "es";
+  const w = words[state.language];
+  for (const node of document.querySelectorAll("[data-i18n]"))
+    node.textContent = w[node.dataset.i18n];
+  $("fan").textContent = w.fan;
+  $("analyst").textContent = w.analyst;
+  $("show-evidence").textContent = w.why;
+  $("recap").textContent = es
+    ? "Resumen de exhibición ↗"
+    : "Exhibition recap ↗";
+  $("uncertainty").textContent =
+    es && data.insight?.analysis?.uncertainty
+      ? "Datos sintéticos; los recuentos no demuestran causalidad."
+      : data.insight?.analysis?.uncertainty || "";
+  $("source").textContent =
+    data.insight?.source === "agents_sdk"
+      ? es
+        ? "Narración de IA · evidencia revisada"
+        : "AI narrative · evidence reviewed"
+      : es
+        ? "Estadísticas · revisión pendiente o no disponible"
+        : "Statistics · review pending or unavailable";
+  document.querySelector(".live-controls").hidden = !data.live;
+  document.querySelector(".view-controls").hidden = !data.live;
+  document.querySelector(".workflow-details").hidden = !data.live;
+  $("correction").hidden = true;
+  $("view-reason").textContent = "";
+  if (!data.live) {
+    setView("pitch");
+    return;
+  }
+  const live = data.live;
+  const age = live.updated_at
+    ? (Date.now() - Date.parse(live.updated_at)) / 1000
+    : Infinity;
+  const running = live.status === "running" && age < 240 && state.frame === -1;
+  $("run-status").textContent = running
+    ? es
+      ? "EN DIRECTO · simulación sintética"
+      : "LIVE · synthetic simulation"
+    : es
+      ? "REPETICIÓN · ejecución registrada"
+      : "REPLAY · recorded run";
+  if (live.status === "not_started")
+    $("run-status").textContent = es
+      ? "Esperando al operador"
+      : "Waiting for the operator";
+  if (live.status === "running" && age >= 240)
+    $("run-status").textContent = es
+      ? "Actualización retrasada"
+      : "Update delayed · last received state";
+  $("run-detail").textContent =
+    `${w.stages[live.frame] || ""} · ${es ? "revisión" : "revision"} ${data.revision}${live.updated_at ? " · " + new Date(live.updated_at).toLocaleTimeString(state.language) : ""}`;
+  $("match-clock").textContent =
+    `${fmt(state.end - 1)} · ${running ? "LIVE" : "REPLAY"}`;
+  $("window-title").textContent = w.stages[live.frame] || w.latest;
+  $("frame").replaceChildren(new Option(w.latest, "-1"));
+  for (let i = 0; i < live.frame_count; i++)
+    $("frame").add(new Option(`${i + 1}. ${w.stages[i]}`, String(i)));
+  $("frame").value = String(state.frame);
+  if (data.facts?.["corrections.void_goals"]?.value) {
+    $("correction").hidden = false;
+    $("correction").textContent = es
+      ? "Marcador corregido: el gol anterior fue anulado por una revisión del evento. El feed no indica el motivo."
+      : "Score corrected: the earlier goal was voided by an event revision. The feed does not state why.";
+  }
+  $("comparison-panel").replaceChildren();
+  const table = document.createElement("table");
+  const caption = document.createElement("caption");
+  caption.textContent = es
+    ? "Harbor · recuentos por intervalo"
+    : "Harbor · counts by window";
+  table.append(caption);
+  const rows = [
+    [
+      es ? "Métrica" : "Metric",
+      `${es ? "Antes" : "Before"} (${data.comparison.before_seconds}s)`,
+      `${es ? "Después" : "After"} (${data.comparison.after_seconds}s)`,
+    ],
+  ];
+  for (const [key, label] of [
+    ["completed_passes", es ? "Pases completos" : "Completed passes"],
+    ["high_recoveries", es ? "Recuperaciones altas" : "High recoveries"],
+    ["shots", es ? "Disparos" : "Shots"],
+    ["goals", es ? "Goles" : "Goals"],
+  ])
+    rows.push([
+      label,
+      data.comparison.before.harbor[key],
+      data.comparison.after.harbor[key],
+    ]);
+  rows.forEach((row, index) => {
+    const tr = document.createElement("tr");
+    for (const value of row) {
+      const cell = document.createElement(index ? "td" : "th");
+      cell.textContent = value;
+      tr.append(cell);
+    }
+    table.append(tr);
+  });
+  $("comparison-panel").append(table);
+  const note = document.createElement("p");
+  note.className = "muted";
+  note.textContent = es
+    ? "Los intervalos pueden tener distinta duración. Los recuentos no prueban causalidad."
+    : "Windows may have different durations. Event counts do not establish causality.";
+  $("comparison-panel").append(note);
+  $("sequence-panel").replaceChildren(
+    ...data.events
+      .filter((e) => e.kind !== "pass" || e.void)
+      .map((e) => eventButton(e, true)),
+  );
+  const view = data.insight?.analysis?.recommended_view || "pitch";
+  setView(
+    state.audience === "analyst" && view !== "timeline" ? "comparison" : view,
+  );
+  $("view-reason").textContent = es
+    ? "Vista elegida para esta explicación; puedes cambiarla."
+    : "View selected for this explanation; you can change it.";
+  $("workflow").replaceChildren();
+  for (const step of live.workflow) {
+    const row = document.createElement("p");
+    row.textContent = `${step.agent} · ${step.status}${step.latency_seconds ? " · " + step.latency_seconds + "s" : ""}${step.reason ? " · " + step.reason : ""}`;
+    $("workflow").append(row);
+  }
+  const summary = document.createElement("p");
+  summary.textContent = `${live.model || ""} · ${live.input_tokens} input / ${live.output_tokens} output tokens · ${live.latency_seconds || "—"}s. ${es ? "Revisión de modelos, no certificación humana." : "Model review, not human certification."}`;
+  $("workflow").append(summary);
+  if (state.frame === -1)
+    state.polling = setTimeout(() => load(true), running ? 5000 : 15000);
+}
+for (const view of ["pitch", "comparison", "timeline"])
+  $("view-" + view).addEventListener("click", () => setView(view));
+$("frame").addEventListener("change", () => {
+  state.frame = Number($("frame").value);
+  load();
+});
+$("watch-live").addEventListener("click", () => {
+  state.live = true;
+  state.frame = -1;
+  load();
+});
 $("play").addEventListener("click", () => {
   if (state.timer) {
     stop();
@@ -361,7 +647,10 @@ $("player").addEventListener("change", () => {
   updateContext();
 });
 $("show-evidence").addEventListener("click", () => {
-  const id = state.data.insight.narrative.evidence_event_ids[0];
+  const ids = state.data.insight.narrative.evidence_event_ids;
+  const id =
+    state.data.events.find((e) => e.void && ids.includes(e.event_id))
+      ?.event_id || ids.at(-1);
   state.selected = state.data.events.find((e) => e.event_id === id);
   $("time").value = state.selected.second;
   draw();
@@ -377,16 +666,23 @@ $("language").addEventListener("change", () => {
   load();
 });
 $("recap").addEventListener("click", () => {
+  state.live = false;
+  clearTimeout(state.polling);
   state.start = 0;
   state.end = 5400;
   load();
 });
 $("reset-window").addEventListener("click", () => {
+  state.live = false;
+  clearTimeout(state.polling);
   state.start = 3300;
   state.end = 3900;
   load();
 });
-window.addEventListener("pagehide", stop);
+window.addEventListener("pagehide", () => {
+  stop();
+  clearTimeout(state.polling);
+});
 async function start() {
   if (embedded) {
     try {

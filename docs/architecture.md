@@ -2,41 +2,46 @@
 
 ```mermaid
 flowchart TD
-  Fixture[Synthetic event fixture] --> Stats[Validated events and exact statistics]
-  Stats --> Analyst[OpenAI Agents SDK: match analyst]
-  Analyst --> Reviewer[Evidence reviewer]
-  Reviewer -->|approved| Writer[Audience and language narrative agent]
-  Writer --> Final[Final evidence review]
-  Final -->|approved| Saved[Atomic saved narrative corpus]
-  Reviewer -->|rejected| Retry[One correction attempt]
-  Final -->|rejected| Retry
+  Operator[Azure RBAC authenticated operator] --> Job[Manual Container Apps job + exclusive blob lease]
+  Job --> Feed[Seeded synthetic event batches]
+  Feed --> State[Revision-aware event store + exact Python facts]
+  State --> Analyst[Match analyst: select story and view]
+  Analyst --> Critic[Evidence critic: approve or reject]
+  Critic --> Editor[Audience editor: fan / analyst, English / Spanish]
+  Editor --> Verifier[Broadcast verifier: check every story]
+  Critic -->|reject| Retry[Coordinator: one correction attempt]
+  Verifier -->|reject| Retry
   Retry --> Analyst
-  Saved --> Service[Azure Container App: read-only service]
-  Stats --> Service
-  Service --> MCP[Streamable HTTP MCP]
-  Service --> Preview[Standalone web preview]
-  MCP --> ChatGPT[ChatGPT MCP Apps view]
-  MCP --> Claude[Claude Code text and structured tools]
-  MCP --> Copilot[VS Code / Copilot Studio tools]
+  Verifier -->|approve| Blob[Private Azure Blob: latest + immutable run archive]
+  State -->|publish statistics immediately| Blob
+  Job -->|failure: statistics only| Blob
+  Blob --> Service[Read-only Azure Container App]
+  Service --> MCP[Official MCP SDK: Streamable HTTP]
+  Service --> Web[Standalone interactive match room]
+  MCP --> Hosts[ChatGPT / Claude Code / Copilot clients]
 ```
 
-Generation and serving have separate lifecycles. Azure OpenAI is used by the operator's generation command; the public Container App has no inference key or inference role. Its managed identity can only pull the container image from MatchLens's registry. The generated image contains synthetic events, approved narrative artifacts and the static UI.
+The authenticated worker uses the OpenAI Agents SDK and Azure OpenAI. Four distinct roles share an immutable, revision-specific fact ledger through schema-validated handoffs. Python validates event revisions and computes all numerical facts. The analyst chooses the story and useful view; reviewers judge language claims; the editor produces four audience/language variants. One rejected draft may be corrected. A second rejection, timeout, exhausted budget or unavailable model publishes current statistics without a stale narrative.
 
-The view runs in the host's MCP Apps sandbox. It calls tools through the host bridge and sends selected event context to the host. It does not talk directly to Azure OpenAI. The standalone preview uses a same-origin REST adapter to the same service functions.
+A duplicate arrival is ignored, late events are reconciled and a goal revision retracts the old score and evidence ID. Every frame contains its evidence hash, facts, model outputs, rejection history, timing and token usage. The read-only `/api/run` endpoint exports this synthetic ledger. Evidence requests can pin the run ID and reject a changed run.
 
-## Design choices
+## Isolation and access
 
-A simple deterministic renderer would suffice for statistics. The Agents SDK is used where language interpretation, evidence review and audience adaptation provide value. Python computes all numerical summaries so generated arithmetic is not the source of truth.
+All resources belong to `matchlens-dev-rg`. The serving identity can pull the MatchLens image and read the private run container. It cannot invoke the model or write a run. The separate worker identity can invoke only the MatchLens Azure OpenAI resource, pull its image and publish to its run container. Blob anonymous access and shared-key authorization are disabled. No Dhisana production code, identity, registry, database or customer data participates.
 
-MCP is the interoperability boundary, not a new custom connector per model vendor. The model used by the surrounding host may differ from the Azure GPT-6 model that generated saved narratives. Claude Code is a client of the same tools; MatchLens does not require the Claude Agent SDK. Copilot Studio is another client; this MVP does not require Microsoft Agent Framework.
+The manual worker has no public trigger or schedule. An exclusive renewable blob lease prevents concurrent publishers. Each run reserves up to 600,000 conservative tokens and 48 model calls, including retries. Every model call has one turn, an output limit, a timeout and no automatic SDK retries; the workflow permits one explicit rate-limit retry. These controls bound generation, but do not constitute a monthly Azure spending cap.
 
-The new repository and Azure resource group allow a later Dhisana adapter without coupling deployments, customer data, authentication or production databases. No current app instance inside Dhisana is required.
+## Intelligent UI and portability
 
-## Known limitations
+The same read-only functions serve MCP and the standalone REST adapter. The MCP Apps view calls tools through its host bridge and supplies selected frame/event context to the surrounding assistant. It never contacts the model directly. The UI selects a pitch, count comparison or correction timeline from the approved analyst recommendation. Users can change audience/language, inspect citations, replay frames and inspect review status.
 
-- Synthetic event positions are not tracking. No reliable possession, xG, speed, off-ball movement or causal tactical conclusions can be derived.
-- Two time windows have saved AI narratives; other valid windows return statistics-only results.
-- Narrative languages are English and Spanish. Most navigation labels remain English.
-- Model reviewers can still miss errors. Schema and citation checks guarantee structure and valid references, not truth of every sentence.
-- The reference bridge harness validates messaging, not vendor-specific deployment or rendering policies.
-- No tenant data, OAuth, licensed data ingestion, continuously running agents or live commentary is implemented.
+MCP is the host interoperability boundary. Claude Code receives text/structured tools; its terminal does not render the match room. Host policies can prevent connections even when the protocol works. Actual host acceptance is recorded separately in `verification.md`.
+
+## Scope and limitations
+
+- The demonstration is six accelerated authored batches. It waits for narrative review between batches; it is not an independently clocked broadcast ingestion service.
+- Seed changes vary coordinates, not scenario gold counts. Synthetic events are not tracking data, possession percentages, xG or proof of tactical causation.
+- Review agents use the same model and can share errors. Valid schemas/citations do not prove every sentence true. The paired evaluation is small and its model grader is advisory.
+- Recorded frames and the bundled fallback must remain explicitly labelled as recordings. They are not a current real-world match.
+- English and Spanish narratives and main controls are supported. No licensed real feeds, tenant authorization or arbitrary public paid generation is exposed.
+- The earlier full-match exhibition remains available as a separate saved recap, not as evidence that the live scenario covers a complete match.

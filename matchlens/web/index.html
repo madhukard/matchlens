@@ -19,8 +19,10 @@
       <section class="intro">
         <div>
           <div class="eyebrow">THE MATCH ROOM / EXHIBITION 001</div>
-          <h1>There’s more to<br />the score.</h1>
-          <p>Follow the moments. Explore the evidence. Understand the game.</p>
+          <h1 data-i18n="title">There’s more to the score.</h1>
+          <p data-i18n="intro">
+            Follow the moments. Explore the evidence. Understand the game.
+          </p>
         </div>
         <div class="intro-note">
           <span>01 / MATCH INTELLIGENCE</span>
@@ -31,7 +33,7 @@
         <div class="team">
           <span class="crest home">H</span>
           <div>
-            <small>HOME</small>
+            <small data-i18n="home">HOME</small>
             <h2>Harbor FC</h2>
           </div>
         </div>
@@ -41,7 +43,7 @@
         </div>
         <div class="team away">
           <div>
-            <small>AWAY</small>
+            <small data-i18n="away">AWAY</small>
             <h2>Summit United</h2>
           </div>
           <span class="crest visitor">S</span>
@@ -54,14 +56,39 @@
         </div>
         <div class="toolbar-right">
           <label
-            >Language
+            ><span data-i18n="language">Language</span>
             <select id="language">
               <option value="en">English</option>
               <option value="es">Español</option>
             </select></label
-          ><button id="recap" class="outline">Full-match recap ↗</button>
+          ><button
+            id="recap"
+            class="outline"
+            title="Open the original full-match exhibition"
+          >
+            Exhibition recap ↗
+          </button>
         </div>
       </nav>
+      <section class="live-controls" aria-label="Live scenario">
+        <div>
+          <span id="run-status" role="status" aria-live="polite"
+            >Connecting to the match…</span
+          >
+          <p id="run-detail" class="muted"></p>
+        </div>
+        <div class="toolbar-right">
+          <label
+            ><span data-i18n="moment">Moment</span
+            ><select id="frame">
+              <option value="-1">Latest update</option>
+            </select></label
+          ><button id="watch-live" class="outline" data-i18n="watch">
+            Watch latest
+          </button>
+        </div>
+      </section>
+      <div id="correction" class="correction" role="status" hidden></div>
       <div id="error" class="error" role="alert" hidden></div>
       <div class="workspace">
         <section class="pitch-panel">
@@ -71,12 +98,26 @@
               <h2 id="window-title">The turning point</h2>
             </div>
             <label class="player-label"
-              >Focus
+              ><span data-i18n="focus">Focus</span>
               <select id="player">
                 <option value="all">All players</option>
               </select></label
             >
           </div>
+          <div class="view-controls" role="group" aria-label="Evidence view">
+            <button id="view-pitch" class="outline" data-i18n="pitch">
+              Pitch
+            </button>
+            <button id="view-comparison" class="outline" data-i18n="comparison">
+              Before / after
+            </button>
+            <button id="view-timeline" class="outline" data-i18n="sequence">
+              Sequence
+            </button>
+          </div>
+          <p id="view-reason" class="muted"></p>
+          <div id="comparison-panel" hidden></div>
+          <div id="sequence-panel" hidden></div>
           <div class="pitch-wrap">
             <div class="pitch-caption">
               <span id="event-caption">Choose an event to follow the play</span
@@ -139,7 +180,8 @@
             <button id="play" aria-label="Play event replay">▶</button>
             <div class="scrubber">
               <label for="time"
-                >Explore the sequence <span id="time-label">55:00</span></label
+                ><span data-i18n="explore">Explore the sequence</span>
+                <span id="time-label">55:00</span></label
               ><input
                 id="time"
                 type="range"
@@ -152,9 +194,9 @@
             <button id="reset-window" class="text-button">55–65′</button>
           </div>
           <div class="metrics" id="metrics"></div>
-          <p class="data-note">
-            Selected on-ball events. Pass counts are not possession; off-ball
-            pressure and xG are not measured.
+          <p class="data-note" data-i18n="dataNote">
+            Synthetic on-ball events and authored pressure tags. Counts are not
+            possession, xG or proof of causality.
           </p>
         </section>
         <aside class="insight-panel">
@@ -169,11 +211,15 @@
             Show me why <span>↗</span>
           </button>
           <div class="evidence-title">
-            <h3>Supporting moments</h3>
+            <h3 data-i18n="support">Supporting moments</h3>
             <span id="evidence-count">—</span>
           </div>
           <div id="evidence-list" class="evidence-list"></div>
-          <div class="review-note">
+          <details class="workflow-details">
+            <summary data-i18n="checked">How this was checked</summary>
+            <div id="workflow"></div>
+          </details>
+          <div class="review-note" data-i18n="reviewNote">
             Evidence IDs connect every saved explanation to the underlying
             events. AI interpretation is distinct from measured fact.
           </div>
@@ -183,7 +229,7 @@
         <div class="panel-heading">
           <div>
             <div class="eyebrow">FOLLOW THE THREAD</div>
-            <h2>Match timeline</h2>
+            <h2 data-i18n="timeline">Match timeline</h2>
           </div>
           <span id="event-count" class="muted"></span>
         </div>

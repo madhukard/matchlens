@@ -5,6 +5,9 @@ param identityId string
 param environmentId string
 param publicHost string
 param appName string = 'matchlens-dev'
+param storageUrl string = ''
+param clientId string = ''
+param minReplicas int = 0
 resource app 'Microsoft.App/containerApps@2025-01-01' = {
   name: appName
   location: location
@@ -29,7 +32,11 @@ resource app 'Microsoft.App/containerApps@2025-01-01' = {
       containers: [{
         name: 'matchlens'
         image: image
-        env: [{ name: 'MATCHLENS_PUBLIC_HOST', value: publicHost }]
+        env: [
+          { name: 'MATCHLENS_PUBLIC_HOST', value: publicHost }
+          { name: 'MATCHLENS_STORAGE_URL', value: storageUrl }
+          { name: 'AZURE_CLIENT_ID', value: clientId }
+        ]
         resources: { cpu: json('0.25'), memory: '0.5Gi' }
         probes: [
           { type: 'Liveness', httpGet: { path: '/health', port: 8000 }, periodSeconds: 30 }
@@ -37,7 +44,7 @@ resource app 'Microsoft.App/containerApps@2025-01-01' = {
         ]
       }]
       scale: {
-        minReplicas: 0
+        minReplicas: minReplicas
         maxReplicas: 1
         rules: [{ name: 'http', http: { metadata: { concurrentRequests: '20' } } }]
       }

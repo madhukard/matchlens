@@ -77,6 +77,21 @@ def test_mcp_rejects_bad_arguments(client):
     assert data.get("error") or data["result"]["isError"]
 
 
+def test_live_tool_returns_structured_ui_data(client):
+    response = rpc(client, "tools/call", {"name": "get_live_match", "arguments": {}})
+    data = response.json()["result"]["structuredContent"]
+    assert data["match"]["match_id"] == "harbor-live"
+    assert "live" in data
+
+
+def test_run_export_is_read_only(client):
+    response = client.get("/api/run")
+    assert response.status_code == 200
+    assert "frames" in response.json()
+    assert "attachment" in response.headers["content-disposition"]
+    assert client.post("/api/run").status_code in (404, 405)
+
+
 def test_dns_rebinding_is_blocked(client):
     response = client.post(
         "/mcp",

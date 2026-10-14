@@ -6,13 +6,14 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from mcp.server import MCPServer
 from mcp.server.transport_security import TransportSecuritySettings
 from mcp.types import CallToolResult, TextContent, ToolAnnotations
 from pydantic import BaseModel, Field, validate_call
 
-from matchlens import service
+from matchlens import live_service, service
+from matchlens.live_store import read_run
 
 WEB = Path(__file__).parent / "web"
 UI_URI = "ui://matchlens/match.html"
@@ -21,8 +22,10 @@ READ_ONLY = ToolAnnotations(
 )
 mcp = MCPServer(
     "MatchLens",
-    version="0.1.0",
-    instructions="Explore synthetic football matches. Use explain_moment for evidence-backed "
+    version="0.2.0",
+    instructions="Use get_live_match to watch the synthetic stream, including corrections. "
+    "Use get_live_evidence for revision-specific evidence. Watching never starts generation. "
+    "Explore synthetic football matches. Use explain_moment for evidence-backed "
     "analysis and the interactive viewer; use get_evidence to verify claims. Never describe "
     "the fixture as real match data. Narrative source statistics_only means AI is unavailable. "
     "Tools never trigger paid generation or publish externally.",
@@ -66,10 +69,25 @@ def register_tool(name, fn, ui=False):
 
 
 # Explicit functions preserve meaningful signatures and portable JSON schemas.
+register_tool("get_live_evidence", live_service.get_live_evidence)
+register_tool("list_live_scenarios", live_service.list_live_scenarios)
 register_tool("list_matches", service.list_matches)
 register_tool("get_match_snapshot", service.get_match_snapshot)
 register_tool("get_evidence", service.get_evidence)
 register_tool("compare_match_windows", service.compare_match_windows)
+
+
+@mcp.tool(annotations=READ_ONLY, meta={"ui": {"resourceUri": UI_URI}})
+def get_live_match(
+    frame: int = -1,
+    audience: service.Audience = "fan",
+    language: service.Language = "en",
+) -> CallToolResult:
+    """Watch the live synthetic stream or replay a recorded frame, with adaptive UI."""
+    data = live_service.get_live_match(frame, audience, language)
+    return CallToolResult(
+        content=[TextContent(type="text", text=json.dumps(data))], structuredContent=data
+    )
 
 
 @mcp.tool(annotations=READ_ONLY, meta={"ui": {"resourceUri": UI_URI}})
@@ -123,7 +141,7 @@ async def lifespan(app):
         yield
 
 
-app = FastAPI(title="MatchLens", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="MatchLens", version="0.2.0", lifespan=lifespan)
 
 
 class ToolRequest(BaseModel):
@@ -135,7 +153,7 @@ class ToolRequest(BaseModel):
 def health():
     return {
         "status": "ok",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "synthetic": True,
         "model_calls_enabled": False,
         "saved_ai_insights": service.INSIGHTS.exists(),
@@ -147,11 +165,22 @@ def index():
     return html_bundle()
 
 
+@app.get("/api/run")
+def run_evidence():
+    """Export the synthetic run ledger; this deployment never contains tenant data."""
+    return JSONResponse(
+        read_run(), headers={"Content-Disposition": 'attachment; filename="matchlens-run.json"'}
+    )
+
+
 @app.post("/api/tools")
 def call_tool(request: ToolRequest):
     tools = {
         fn.__name__: fn
         for fn in (
+            live_service.get_live_match,
+            live_service.get_live_evidence,
+            live_service.list_live_scenarios,
             service.list_matches,
             service.get_match_snapshot,
             service.get_evidence,
@@ -173,6 +202,9 @@ def call_tool(request: ToolRequest):
 REST_TOOLS = {
     fn.__name__: validate_call(fn)
     for fn in (
+        live_service.get_live_match,
+        live_service.get_live_evidence,
+        live_service.list_live_scenarios,
         service.list_matches,
         service.get_match_snapshot,
         service.get_evidence,

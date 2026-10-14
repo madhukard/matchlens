@@ -1,15 +1,30 @@
 # Verification — 14 October 2026
 
-- 23 Python tests passed, including exact statistics, boundaries, input rejection, MCP discovery, resource bundling, reviewer rejection, bounded correction, atomic publication and all eight shipped artifact schemas/citations.
-- Ruff, JavaScript syntax checking, dependency consistency and GitHub Actions passed.
-- Eight narratives were generated through the real Azure `gpt-6-sol` deployment and the OpenAI Agents SDK. Both evidence reviews passed for every shipped artifact. Rejected attempts were not published.
-- Azure Container Registry built the Linux image `matchlens:v0.1.0` successfully. Azure reports the westus2 app and environment Succeeded.
-- Public `/health` returned `status=ok`, `saved_ai_insights=true`, `model_calls_enabled=false`.
-- The official MCP Python client passed discovery, tool invocation, evidence checks, UI resource retrieval and invalid-input checks against the public HTTPS endpoint.
-- Chrome verified the deployed narrative, clickable evidence and match view. Local Chrome checks covered audience changes, the full recap and a 390px viewport without horizontal overflow.
-- A local MCP Apps host harness verified initialization, host-tool calls, selected-event model context, Spanish narrative/context consistency and host-theme handling.
-- The private ChatGPT plugin listing is present under Installed with one MCP server and one skill. The account release is `pluginrel_6acfdfe94bd881919d1aeb273bf256d6`; plugin ID is `plugins_6acfdfe899388191af6dc5741e611de1`.
+## Automated and protocol checks
 
-Not yet verified: rendering inside an actual ChatGPT conversation, a Claude Code session, a VS Code Copilot session, or a Copilot Studio agent. Their connection configurations and steps are included; a reference bridge test does not establish behavior in every host.
+- 36 Python tests pass. Coverage includes exact statistics, future-event boundaries, duplicate/late delivery, revision conflicts, score retraction, superseded and cross-run citations, structured MCP UI results, read-only export, reviewer feedback propagation, bounded rate-limit retry, budget reservation and statistics-only fallback.
+- Ruff and JavaScript syntax checks pass. Installed dependencies pass consistency checking. A focused credential-pattern scan of 62 repository files found no potential embedded secrets; this is not an exhaustive security audit.
+- The official MCP Python client passes discovery of nine tools, structured invocation, evidence checks, UI resource retrieval and invalid-input checks on the public Azure endpoint.
+- The final paired evaluation records multi-agent 4/4 packages passing publication gates versus single-agent 2/4, with higher latency/token usage. See `evaluation.md` for full conditions, earlier trials and limits.
 
-The original eastus environment stalled before app creation. Its deployment was canceled and deletion requested; the last observed state was ScheduledForDelete. The live service uses the successful westus2 environment, in the same new resource group. No existing Dhisana resource was changed.
+## Browser and host checks
+
+Chrome checks verified the public score and goal correction, audience/language controls, a 390px viewport without horizontal overflow, and no visible application error. The local MCP Apps harness verified initialization, host tool calls, light-theme context, Spanish rendering and selected-event context containing the corrected `finish-4@2`, run ID and evidence hash. Unchanged background polling preserves the selected view.
+
+The private ChatGPT plugin listing is version 0.2.0, release `pluginrel_6acfe6db4d148191a6288a6234c60e97`, plugin `plugins_6acfdfe899388191af6dc5741e611de1`. Actual native conversation rendering is still awaiting the owner's manual acceptance check; the harness is not a substitute.
+
+Claude Code 2.1.300 is installed through its official npm package but reports `loggedIn: false`; website authentication did not authenticate the CLI. No Claude Code end-to-end pass is claimed.
+
+GitHub Copilot CLI 1.0.98 was tested with the MatchLens MCP configuration. Organization policy explicitly blocked third-party MCP servers. The account administrator must resolve permitted access; no policy bypass or Copilot success is claimed. VS Code Copilot and Copilot Studio have not been independently accepted.
+
+## Azure evidence
+
+All changes are scoped to `matchlens-dev-rg`. The inventory contains dedicated AI, registry, serving/worker identities, storage, environment, app and manual job resources. The abandoned eastus environment is absent from the current inventory. The serving app has no inference key or inference role; the worker's managed identity successfully invokes the dedicated model and publishes to private storage.
+
+The first worker run encountered rate limits while evaluation ran concurrently. RC3 then completed with five approved frames and one correctly withheld pressure narrative. The verifier caught pass-attempt/completion and event-order claims. This led to the editor-feedback regression fix and another serialized validation run. A successful job exit is never treated as proof that all narratives were approved.
+
+Final six-frame acceptance and the final immutable image digest are recorded below after completion. The reproducible check is `python scripts/verify_live.py <demo-base-url> --save matchlens/data/live.json`.
+
+### Final live run accepted
+
+Execution `matchlens-live-worker-3pdjzub`, run `c34edcdf-2daa-4bcc-a7b4-7ef3a0c052a1`, completed at 2026-10-14 20:52:08 UTC. All six frames passed both reviews. Frame generation times: 17.676, 13.993, 14.233, 21.174, 20.662 and 20.869 seconds. The public acceptance script verified all 24 audience/language combinations, 1–0 at frame 4, 0–0 at frame 5, rejection of the superseded goal ID, and rejection of a different run ID. The full ledger is bundled in `matchlens/data/live.json` for an explicitly labelled recording fallback.

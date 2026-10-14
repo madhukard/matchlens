@@ -27,21 +27,20 @@ ruff check matchlens tests
 
 ## How the agents work
 
-1. Python computes statistics from immutable, validated event records.
-2. The match analyst uses an Agents SDK function tool to retrieve that evidence and creates structured claims.
-3. An evidence reviewer checks those claims against the same events.
-4. A narrative agent adapts the approved analysis for fans or analysts in English or Spanish.
-5. A second review checks the final narrative. Invalid event IDs or failed reviews stop publication. One correction attempt can use reviewer feedback; a second failure aborts the batch.
+The live demonstration ingests six synthetic event batches, including duplicate and late arrivals, a reported goal and its correction. Exact Python statistics update before AI review. Four Agents SDK roles select the story, challenge its evidence, adapt it for fans/analysts in English/Spanish, and verify every localized narrative. Rejection triggers one correction attempt; persistent failure publishes statistics without a stale story.
 
-Narratives are generated **offline**, then saved atomically. Fully reviewed intermediate variants are cached under ignored `.local/reviewed/` so an interrupted batch can resume without publishing partial results. The public service exposes only read-only tools and never receives a model credential. Eight saved variants cover 55–65 minutes and the full match, two audiences, and two languages. Other windows return exact statistics with an explicit “AI not generated” message. Model review reduces errors but is not human verification.
+The intelligent UI selects a pitch, comparison or correction timeline from the approved analysis. Replay **frame 4** to see the reported 1–0 score, then **frame 5** to see its retraction to 0–0 and revised evidence. Frame numbers in tool arguments are zero-based; the UI labels moments 1–6. The full-match exhibition is a separate saved example.
 
-To regenerate with Azure, set `MATCHLENS_PROVIDER=azure`, `MATCHLENS_MODEL` to your deployment name, and `AZURE_OPENAI_ENDPOINT`. Supply `AZURE_OPENAI_API_KEY` through your secret manager, or use Azure identity with the appropriate inference role. For OpenAI, set `MATCHLENS_PROVIDER=openai` and `OPENAI_API_KEY`.
+Generation runs in an authenticated, manual Azure Container Apps job with an exclusive publication lease and per-run token/call limits. The public service can only read synthetic records; watching never triggers paid model calls. Runs retain evidence, handoffs, rejected attempts, latency and usage. Download the current synthetic ledger from `/api/run`.
+
+For local generation, set `AZURE_OPENAI_ENDPOINT` and `MATCHLENS_MODEL` to the Azure deployment name. Use an identity with inference permission or supply `AZURE_OPENAI_API_KEY` through your secret manager. Then run:
 
 ```sh
-python -m matchlens.intelligence
+python -m matchlens.worker --seed 7 --interval 2
+python -m matchlens.evaluate
 ```
 
-The command makes paid model calls with bounded turns and timeouts. It does not load `.env` automatically. Never commit credentials. Tracing is disabled and Responses requests use `store=False`.
+Both commands make paid calls. They do not load `.env` automatically. Run them sequentially to avoid competing for model quota. Responses use `store=False`; SDK tracing is disabled. The worker waits for review between accelerated batches, so this is not a subsecond broadcast feed. See [architecture and limitations](docs/architecture.md), [verification](docs/verification.md) and [submission gates](docs/submission-readiness.md).
 
 ## Clients
 

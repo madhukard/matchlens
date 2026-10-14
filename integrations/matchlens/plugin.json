@@ -1,25 +1,28 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "matchlens",
-  "version": "0.1.0",
-  "description": "Explore synthetic football matches with evidence-linked narratives and an interactive pitch.",
   "author": {
-    "name": "Dhisana AI"
+    "email": "madhukard@gmail.com",
+    "name": "Madhukar D"
   },
+  "description": "Explore synthetic football matches with evidence-linked narratives and an interactive pitch.",
   "extensions": {
     "com.openai": {
       "interface": {
-        "displayName": "MatchLens",
-        "shortDescription": "See the story behind the score",
-        "longDescription": "Explore fictional match events, replay a pitch sequence, compare exact statistics and read reviewed GPT-6 narratives for fans or analysts. All data in this demo is synthetic.",
-        "developerName": "Dhisana AI",
+        "brandColor": "#205D4E",
+        "capabilities": [
+          "Interactive"
+        ],
         "category": "Productivity",
-        "capabilities": ["Interactive"],
-        "defaultPrompt": "Show the MatchLens demo and explain the 55\u201365 minute window.",
-        "logo": "./assets/icon.svg",
         "composerIcon": "./assets/icon.svg",
-        "brandColor": "#205D4E"
+        "defaultPrompt": "Show the MatchLens demo and explain the 55–65 minute window.",
+        "developerName": "Madhukar D",
+        "displayName": "MatchLens",
+        "logo": "./assets/icon.svg",
+        "longDescription": "Watch a synthetic football stream, inspect corrected goals, compare event windows and switch between reviewed English and Spanish stories for fans or analysts. OpenAI Agents SDK specialists share versioned evidence; all match data is fictional.",
+        "shortDescription": "See the story behind the score"
       }
     }
-  }
+  },
+  "name": "matchlens",
+  "version": "0.2.0"
 }

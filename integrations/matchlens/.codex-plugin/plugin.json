@@ -1,0 +1,26 @@
+{
+  "interface": {
+    "brandColor": "#205D4E",
+    "capabilities": [
+      "Interactive"
+    ],
+    "category": "Productivity",
+    "composerIcon": "./assets/icon.svg",
+    "defaultPrompt": "Show the MatchLens demo and explain the 55–65 minute window.",
+    "developerName": "Madhukar D",
+    "displayName": "MatchLens",
+    "logo": "./assets/icon.svg",
+    "longDescription": "Watch a synthetic football stream, inspect corrected goals, compare event windows and switch between reviewed English and Spanish stories for fans or analysts. OpenAI Agents SDK specialists share versioned evidence; all match data is fictional.",
+    "shortDescription": "See the story behind the score"
+  },
+  "name": "matchlens",
+  "version": "0.2.0",
+  "description": "Explore synthetic football matches with evidence-linked narratives and an interactive pitch.",
+  "author": {
+    "name": "Madhukar D",
+    "email": "madhukard@gmail.com"
+  },
+  "keywords": [],
+  "skills": "./skills",
+  "mcpServers": "./.mcp.json"
+}
