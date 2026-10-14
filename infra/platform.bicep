@@ -1,6 +1,7 @@
 param location string = resourceGroup().location
 param registryName string
-param environmentName string = 'matchlens-dev-env'
+param environmentName string = 'matchlens-dev-env-west'
+param environmentLocation string = 'westus2'
 resource registry 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
   name: registryName
   location: location
@@ -22,7 +23,7 @@ resource pull 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
 }
 resource environment 'Microsoft.App/managedEnvironments@2025-01-01' = {
   name: environmentName
-  location: location
+  location: environmentLocation
   properties: {
     workloadProfiles: [{ name: 'Consumption', workloadProfileType: 'Consumption' }]
   }

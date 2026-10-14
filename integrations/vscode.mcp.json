@@ -2,7 +2,7 @@
   "servers": {
     "matchlens": {
       "type": "http",
-      "url": "https://matchlens-dev.agreeablemushroom-147a503e.eastus.azurecontainerapps.io/mcp"
+      "url": "https://matchlens-dev.redforest-787f42f7.westus2.azurecontainerapps.io/mcp"
     }
   }
 }

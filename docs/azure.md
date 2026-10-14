@@ -1,13 +1,13 @@
 # Azure deployment and operations
 
-The first deployment uses the same subscription as Dhisana, **Dhisana AI Development**, in a NEW resource group, **matchlens-dev-rg**, eastus. Existing Dhisana resource groups, services, identities, DNS and databases are not dependencies and were not modified.
+The first deployment uses the same subscription as Dhisana, **Dhisana AI Development**, in a NEW resource group, **matchlens-dev-rg**. The resource group, registry and AI account are in eastus; the serving environment and app are in westus2. Existing Dhisana resource groups, services, identities, DNS and databases are not dependencies and were not modified.
 
 Resources:
 
 - `matchlens-dev-ai-1f5dc8`: separate Azure OpenAI account; `gpt-6-sol` version `2026-09-22`, GlobalStandard, capacity 10. Used for offline synthetic narrative generation only.
 - `matchlensdev1f5dc8`: Basic Container Registry, admin password disabled.
 - `matchlens-dev-runtime`: managed identity with AcrPull scoped to that new registry only.
-- `matchlens-dev-env`: consumption Container Apps environment.
+- `matchlens-dev-env-west`: consumption Container Apps environment in westus2.
 - `matchlens-dev`: HTTPS app, 0–1 replica, 0.25 CPU and 0.5 GiB RAM. Contains saved demo artifacts, no model credentials.
 
 `infra/platform.bicep`, `infra/app.bicep` and `infra/ai.bicep` describe the resources. `scripts/deploy.sh` rebuilds the serving image and updates only the new resource group. The AI template is separate because normal web deployments should not change model deployments. Region/model quota must be available.
@@ -27,3 +27,5 @@ No monthly budget amount was supplied, so no arbitrary budget or hard spending c
 The public `/mcp` and preview expose fictional demo data only. Tools cannot invoke paid models, write files, fetch arbitrary URLs or change infrastructure. Do not add private match feeds or customer records until OAuth and per-user authorization are implemented. Browser UI uses host MCP calls rather than exposing Azure credentials. MCP requests retain allowed-host and origin validation.
 
 For rollback, redeploy `infra/app.bicep` with a previously tested immutable image tag. Health is `/health`; MCP is `/mcp`. A cold start is possible at zero replicas. To retire the demo, review and remove only `matchlens-dev-rg` through your normal Azure process; never run cleanup against a Dhisana group.
+
+The initial eastus serving environment remained queued. A separate westus2 environment successfully provisioned, and deletion of the unused eastus environment was requested. It last reported `ScheduledForDelete`; Azure has not yet confirmed deletion. This was contained within the new MatchLens resource group.

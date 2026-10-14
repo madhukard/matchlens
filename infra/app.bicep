@@ -1,4 +1,4 @@
-param location string = resourceGroup().location
+param location string = 'westus2'
 param image string
 param registryServer string
 param identityId string

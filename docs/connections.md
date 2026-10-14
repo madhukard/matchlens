@@ -1,12 +1,14 @@
 # Connect MatchLens
 
-Demo URL: https://matchlens-dev.agreeablemushroom-147a503e.eastus.azurecontainerapps.io
+Demo URL: https://matchlens-dev.redforest-787f42f7.westus2.azurecontainerapps.io
 
-MCP URL: https://matchlens-dev.agreeablemushroom-147a503e.eastus.azurecontainerapps.io/mcp
+MCP URL: https://matchlens-dev.redforest-787f42f7.westus2.azurecontainerapps.io/mcp
 
 Transport: **Streamable HTTP**. Authentication: **None**, deliberately limited to synthetic, read-only public demo data. No model API key belongs in client configuration.
 
 ## ChatGPT
+
+[MatchLens private plugin](https://chatgpt.com/plugins/plugins_6acfdfe899388191af6dc5741e611de1) is saved in the owner’s personal account. Its ChatGPT listing was verified under Installed with one MCP server and one skill. Open the plugin and use its suggested prompt. The current Codex chat has not loaded the new plugin tools; a client conversation with MatchLens selected is required for a real host-rendering acceptance test.
 
 Use ChatGPT's custom app/developer connection flow, where enabled by your plan and workspace administrator. Create a connection named MatchLens using the MCP URL and no authentication. Enable it for the conversation and ask:
 
@@ -17,7 +19,7 @@ The `explain_moment` and `create_recap` tools advertise an MCP Apps resource. It
 ## Claude Code
 
 ```sh
-claude mcp add --transport http matchlens https://matchlens-dev.agreeablemushroom-147a503e.eastus.azurecontainerapps.io/mcp
+claude mcp add --transport http matchlens https://matchlens-dev.redforest-787f42f7.westus2.azurecontainerapps.io/mcp
 ```
 
 Alternatively merge `integrations/claude.mcp.json` into the project's `.mcp.json`; do not overwrite existing servers. Use `/mcp` to check the connection. Ask for a recap or compare windows. Open the demo URL for the interactive pitch; do not expect a terminal to render the MCP App.

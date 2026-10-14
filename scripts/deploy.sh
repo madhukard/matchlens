@@ -6,12 +6,13 @@ set -euo pipefail
 AZ="${AZ_CLI:-az}"
 RG=matchlens-dev-rg
 LOCATION="${MATCHLENS_LOCATION:-eastus}"
+APP_LOCATION="${MATCHLENS_APP_LOCATION:-westus2}"
 TAG="${MATCHLENS_IMAGE_TAG:-$(git rev-parse --short HEAD)}"
 "$AZ" group create --subscription "$MATCHLENS_SUBSCRIPTION" -n "$RG" -l "$LOCATION" --tags project=matchlens environment=demo -o none
-"$AZ" deployment group create --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-platform -f infra/platform.bicep -p registryName="$MATCHLENS_REGISTRY" -o none
-REGISTRY=$("$AZ" deployment group show --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-platform --query properties.outputs.registryServer.value -o tsv)
-IDENTITY=$("$AZ" deployment group show --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-platform --query properties.outputs.identityId.value -o tsv)
-ENVIRONMENT=$("$AZ" deployment group show --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-platform --query properties.outputs.environmentId.value -o tsv)
-DOMAIN=$("$AZ" deployment group show --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-platform --query properties.outputs.defaultDomain.value -o tsv)
+"$AZ" deployment group create --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-platform-west -f infra/platform.bicep -p registryName="$MATCHLENS_REGISTRY" environmentLocation="$APP_LOCATION" -o none
+REGISTRY=$("$AZ" deployment group show --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-platform-west --query properties.outputs.registryServer.value -o tsv)
+IDENTITY=$("$AZ" deployment group show --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-platform-west --query properties.outputs.identityId.value -o tsv)
+ENVIRONMENT=$("$AZ" deployment group show --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-platform-west --query properties.outputs.environmentId.value -o tsv)
+DOMAIN=$("$AZ" deployment group show --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-platform-west --query properties.outputs.defaultDomain.value -o tsv)
 "$AZ" acr build --subscription "$MATCHLENS_SUBSCRIPTION" -r "$MATCHLENS_REGISTRY" -t "matchlens:$TAG" .
-"$AZ" deployment group create --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-app -f infra/app.bicep -p image="$REGISTRY/matchlens:$TAG" registryServer="$REGISTRY" identityId="$IDENTITY" environmentId="$ENVIRONMENT" publicHost="matchlens-dev.$DOMAIN" --query properties.outputs -o json
+"$AZ" deployment group create --subscription "$MATCHLENS_SUBSCRIPTION" -g "$RG" -n matchlens-app -f infra/app.bicep -p location="$APP_LOCATION" image="$REGISTRY/matchlens:$TAG" registryServer="$REGISTRY" identityId="$IDENTITY" environmentId="$ENVIRONMENT" publicHost="matchlens-dev.$DOMAIN" --query properties.outputs -o json
