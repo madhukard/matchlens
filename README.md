@@ -4,7 +4,9 @@ An evidence-first football match room: an interactive pitch, event replay, exact
 
 **[Open the live demo](https://matchlens-dev.redforest-787f42f7.westus2.azurecontainerapps.io)** · **[Open the private ChatGPT plugin](https://chatgpt.com/plugins/plugins_6acfdfe899388191af6dc5741e611de1)**
 
-This MVP uses fictional Harbor FC and Summit United and deterministic synthetic events. It contains no licensed Premier League feeds, real player tracking, betting predictions, or Dhisana customer data.
+![MatchLens corrected-goal evidence view](docs/preview.png)
+
+This demonstration uses fictional Harbor FC and Summit United and deterministic synthetic events. It contains no licensed Premier League feeds, real player tracking, betting predictions, or Dhisana customer data.
 
 ## Run locally
 

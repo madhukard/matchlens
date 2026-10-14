@@ -24,7 +24,7 @@ MatchLens handles the moment a broadcast explanation becomes wrong: a reported g
 
 ## Release gates still open
 
-- Six-frame live acceptance and 1:53 video inspection passed. Final deployment verification is recorded in `verification.md`.
+- Six-frame live acceptance and 1:53 video inspection passed. Final v0.2.0 deployment and public acceptance checks passed; evidence is recorded in `verification.md`.
 - ChatGPT native conversation rendering requires acceptance evidence; the reference harness is insufficient.
 - Claude website sign-in is not Claude Code CLI authentication; CLI acceptance is pending.
 - Copilot CLI testing encountered an organization policy blocking third-party MCP servers. Do not bypass that policy or claim that host passed.

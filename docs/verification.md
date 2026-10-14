@@ -28,3 +28,19 @@ Final six-frame acceptance and the final immutable image digest are recorded bel
 ### Final live run accepted
 
 Execution `matchlens-live-worker-3pdjzub`, run `c34edcdf-2daa-4bcc-a7b4-7ef3a0c052a1`, completed at 2026-10-14 20:52:08 UTC. All six frames passed both reviews. Frame generation times: 17.676, 13.993, 14.233, 21.174, 20.662 and 20.869 seconds. The public acceptance script verified all 24 audience/language combinations, 1–0 at frame 4, 0–0 at frame 5, rejection of the superseded goal ID, and rejection of a different run ID. The full ledger is bundled in `matchlens/data/live.json` for an explicitly labelled recording fallback.
+
+### Released artifact
+
+- Image: `matchlensdev1f5dc8.azurecr.io/matchlens:v0.2.0`
+- Digest: `sha256:25f0ca75ccc5081c270f4a6dc08e5dd3f9c37773d2e4ebf4e384070add3d7458`
+- Ready Azure revision: `matchlens-dev--0000004`; provisioning state Succeeded.
+- Public MCP smoke and the six-frame / 24-variant acceptance script passed again against this final release.
+- Implementation commit `1c9c35a` passed [GitHub Actions](https://github.com/madhukard/matchlens/actions/runs/38636264771).
+- Focused credential-pattern scans found no potential embedded secrets in 62 working-tree files or 99 history blobs. This does not establish an exhaustive security audit.
+- The 1:53 H.264 demo was decoded for duration and opening/middle/closing frame inspection. It has English captions and no audio. The opening is a labelled replay still; the main sequence is actual Azure UI capture; the closing trace is held for the evaluation caption.
+
+## Final evaluator review
+
+The strongest category evidence is the revision-aware correction path, explicit agent responsibilities, retained rejection history, recoverable handoffs and paired baseline. Technical and presentation evidence now supports a credible demonstration. The main competitive limitation is the small authored scenario: this is not licensed, continuous match ingestion, and the same-model reviewer/grader setup is not independent assurance. The additional calls demonstrably cost latency and tokens.
+
+Submission remains gated on public repository and accepted public video hosting, owner-confirmed entrant details and final portal review. Native ChatGPT/Claude/Copilot acceptance remains incomplete as described above. Do not label the complete requested integration scope or the competition submission “100% ready” while these gates are open.
