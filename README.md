@@ -8,6 +8,8 @@ An evidence-first football match room: an interactive pitch, event replay, exact
 
 This demonstration uses fictional Harbor FC and Summit United and deterministic synthetic events. It contains no licensed Premier League feeds, real player tracking, betting predictions, or Dhisana customer data.
 
+[Judge’s three-minute walkthrough](docs/judge-guide.md) · [Release review](docs/competition-review.md)
+
 ## Run locally
 
 Python 3.12 required.

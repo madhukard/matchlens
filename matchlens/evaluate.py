@@ -1,5 +1,6 @@
 """Reproducible paired evaluation. Model grading is advisory, never a human audit."""
 
+import argparse
 import asyncio
 import json
 from pathlib import Path
@@ -35,11 +36,40 @@ def cases():
         yield name, state.snapshot(clock)
 
 
-async def evaluate(model):
+def challenge_cases():
+    """Additional authored cases change facts, not just pitch coordinates."""
+    yield "empty_feed", MatchState().snapshot(3359)
+    state = MatchState()
+    for clock, events in scenario(seed=31)[:4]:
+        for event in events:
+            if event.kind == "pass":
+                event = event.model_copy(update={"successful": False})
+            state.ingest(event)
+    yield "all_passes_unsuccessful", state.snapshot(clock)
+    state = MatchState()
+    for clock, events in scenario(seed=31):
+        for event in events:
+            state.ingest(event)
+    goal = state.events["finish-4"]
+    state.ingest(goal.model_copy(update={"revision": 3, "void": False}))
+    yield "goal_reinstated", state.snapshot(clock)
+    second_goal = goal.model_copy(update={"event_id": "second-goal", "revision": 1})
+    state.ingest(second_goal.model_copy(update={"void": False}))
+    state.ingest(second_goal.model_copy(update={"revision": 2, "void": True}))
+    state.ingest(goal.model_copy(update={"revision": 4, "void": True}))
+    yield "two_voided_goals", state.snapshot(clock)
+
+
+async def evaluate(model, extended=False, target=None):
+    target = Path(target or "matchlens/data/evaluation.json")
+    if target.exists():
+        raise FileExistsError(f"Preserve existing evaluation: {target}")
     budget = Budget(tokens=1_200_000, calls=64)
     results = []
-    for name, data in cases():
-        for baseline in (True, False):
+    suite = list(cases()) + (list(challenge_cases()) if extended else [])
+    for index, (name, data) in enumerate(suite):
+        # Counterbalance order to reduce consistent first/second-call bias.
+        for baseline in (True, False) if index % 2 == 0 else (False, True):
             workflow = Workflow(model, budget)
             start = perf_counter()
             row = {
@@ -106,22 +136,33 @@ async def evaluate(model):
         "summary": summary,
         "results": results,
         "limitations": [
-            "Four paired synthetic cases, one run per approach; exploratory.",
+            f"{len(suite)} paired authored synthetic cases, one run per approach; exploratory.",
             "Same model grades outputs blindly; correlated errors remain.",
             "Tokens and latency measured; dollar cost requires account pricing.",
             "No claims of statistical superiority or independent human review.",
         ],
         "budget": {"reserved_token_limit": 1_200_000, "model_call_limit": 64},
     }
-    target = Path("matchlens/data/evaluation.json")
+    report["suite"] = "extended-v1" if extended else "original-v1"
+    report["approach_order"] = "alternating by case"
+    report["model"] = str(getattr(model, "model", "unspecified"))
+    target = Path(target or "matchlens/data/evaluation.json")
+    if target.exists():
+        raise FileExistsError(f"Preserve existing evaluation: {target}")
     target.write_text(json.dumps(report, indent=2, ensure_ascii=False))
     print(json.dumps(summary), flush=True)
     return report
 
 
 async def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--extended", action="store_true")
+    parser.add_argument("--output", default="matchlens/data/evaluation.json")
+    args = parser.parse_args()
+    if Path(args.output).exists():
+        parser.error("Output already exists; choose a new path to preserve prior trials")
     async with model_client() as model:
-        await evaluate(model)
+        await evaluate(model, extended=args.extended, target=args.output)
 
 
 if __name__ == "__main__":

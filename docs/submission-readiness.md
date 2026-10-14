@@ -17,10 +17,10 @@ MatchLens handles the moment a broadcast explanation becomes wrong: a reported g
 | Criterion (20% each) | Demonstration | Remaining gate |
 | --- | --- | --- |
 | Technical implementation | Azure managed identities, private Blob, manual worker, public read-only MCP, validated revisions | Six-frame / 24-variant live check passed; final image check recorded in verification |
-| Agentic innovation | Four roles, shared evidence, bounded correction, explicit failure mode | Completed: 4/4 multi vs 2/4 baseline; latency/cost limits disclosed |
+| Agentic innovation | Four roles, shared evidence, bounded correction, explicit failure mode | Completed: 8/8 multi vs 3/8 baseline in expanded authored evaluation; higher latency/token use disclosed |
 | Impact and usefulness | Corrected score, inspectable evidence, two audiences and languages | Demonstration and user review; no invented adoption metrics |
 | UX and presentation | Adaptive pitch/comparison/timeline, replay, citations, review disclosure | Browser and bridge checks passed; 1:53 captioned demo published; native ChatGPT check remains |
-| Category adherence | Multi-agent workflow and single-agent baseline | Show measurable tradeoffs; do not claim statistical superiority from four cases |
+| Category adherence | Multi-agent workflow and single-agent baseline | Show measurable tradeoffs; do not claim statistical superiority from eight authored cases |
 
 ## Release status and remaining gates
 
@@ -33,3 +33,7 @@ MatchLens handles the moment a broadcast explanation becomes wrong: a reported g
 - Recommended project branding: **MatchLens by Dhisana**. Official rules sections 3 and 4.10 allow organizations with an authorized individual representative. Use the company’s exact registered legal name in legal entrant fields; confirm it and final portal fields before owner submission.
 
 No award, selection or perfect reliability is promised. This document records unresolved gates, not a certificate of submission readiness.
+
+## Follow-up review
+
+See [competition-review.md](competition-review.md) for the current rule-to-evidence review and [judge-guide.md](judge-guide.md) for the browser walkthrough. The official page reconfirmed registration and identified Innovation Studio as the submission platform. Its invitation link and actual form remain unavailable in this review. The live-feed pilot is explicitly deferred in [live-pilot.md](live-pilot.md); no provider purchase has been made.

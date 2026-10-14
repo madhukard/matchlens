@@ -48,6 +48,6 @@ az containerapp job start --subscription "$MATCHLENS_SUBSCRIPTION" --resource-gr
 
 Watch execution state and inspect `/api/run` for frame status, evidence and trace. A successful job exit alone does not mean every narrative passed review: inspect all six frames. Do not run evaluation concurrently with this job; both consume the same model quota. No automatic schedule or public generation trigger exists.
 
-Generation reserves up to 600,000 conservative tokens / 48 calls per stream. A four-case paired evaluation reserves up to 1,200,000 / 64 calls, including advisory graders. These reservations and the 60,000 tokens/minute model throughput limit are different controls. Neither establishes a monthly dollar cap. Failed calls may still consume quota; each explicit retry reserves budget again.
+Generation reserves up to 600,000 conservative tokens / 48 calls per stream. The paired evaluation (four original cases, or eight with `--extended`) reserves up to 1,200,000 / 64 calls, including advisory graders. These reservations and the 60,000 tokens/minute model throughput limit are different controls. Neither establishes a monthly dollar cap. Failed calls may still consume quota; each explicit retry reserves budget again.
 
 For a hung execution, use the Azure job's stop operation scoped to `matchlens-live-worker` and the exact execution name. Do not delete or modify any Dhisana resources. A bundled recorded run supports read-only judging when Blob retrieval is unavailable and is labelled as a recording.

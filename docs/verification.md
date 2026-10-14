@@ -2,10 +2,10 @@
 
 ## Automated and protocol checks
 
-- 36 Python tests pass. Coverage includes exact statistics, future-event boundaries, duplicate/late delivery, revision conflicts, score retraction, superseded and cross-run citations, structured MCP UI results, read-only export, reviewer feedback propagation, bounded rate-limit retry, budget reservation and statistics-only fallback.
+- 63 Python tests pass. Coverage includes exact statistics, future-event boundaries, duplicate/late delivery, revision conflicts, score retraction, superseded and cross-run citations, structured MCP UI results, read-only export, reviewer feedback propagation, bounded rate-limit retry, budget reservation and statistics-only fallback. The added coverage includes four new semantic fixtures, 20 delivery-order/duplicate checks, each localized correction gate, persistent verifier rejection and report preservation. These are deterministic regression tests, not 63 independent model evaluations.
 - Ruff and JavaScript syntax checks pass. Installed dependencies pass consistency checking. A focused credential-pattern scan of 62 repository files found no potential embedded secrets; this is not an exhaustive security audit.
 - The official MCP Python client passes discovery of nine tools, structured invocation, evidence checks, UI resource retrieval and invalid-input checks on the public Azure endpoint.
-- The final paired evaluation records multi-agent 4/4 packages passing publication gates versus single-agent 2/4, with higher latency/token usage. See `evaluation.md` for full conditions, earlier trials and limits.
+- The expanded eight-case evaluation records multi-agent 8/8 packages passing publication gates versus single-agent 3/8, with higher latency/token usage. The original four-case video result remains preserved. See `evaluation.md` for full conditions, earlier trials and limits.
 
 ## Browser and host checks
 
@@ -44,3 +44,7 @@ Execution `matchlens-live-worker-3pdjzub`, run `c34edcdf-2daa-4bcc-a7b4-7ef3a0c0
 The strongest category evidence is the revision-aware correction path, explicit agent responsibilities, retained rejection history, recoverable handoffs and paired baseline. Technical and presentation evidence now supports a credible demonstration. The main competitive limitation is the small authored scenario: this is not licensed, continuous match ingestion, and the same-model reviewer/grader setup is not independent assurance. The additional calls demonstrably cost latency and tokens.
 
 The repository is public following explicit owner authorization. The [1:53 demo video](https://www.youtube.com/watch?v=qdtIEEIp8bE) is public on the approved Dhisana.ai account’s channel; publication confirmation, playback and duration were checked on 14 October 2026. Submission remains gated on owner-confirmed entrant details and final portal review. The owner confirmed native ChatGPT is not yet tested, and Copilot is blocked by organization policy as described above; Claude Code tool acceptance passed. Do not label the complete requested integration scope or the competition submission “100% ready” while these gates are open.
+
+## Readiness recheck
+
+On 14 October 2026 the public six-frame / 24-variant check and the nine-tool MCP smoke test passed again. The first live check timed out during a container start from zero replicas; Azure system logs recorded startup probe failures followed by successful serving. The retry passed without infrastructure changes. This cold-start limitation is disclosed in the judge guide. No application image or Dhisana production resource changed during this evaluation/documentation pass.
