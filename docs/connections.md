@@ -47,6 +47,6 @@ Host rendering should be verified separately in each client; protocol compliance
 
 The private plugin was updated to 0.2.0 (release `pluginrel_6acfe6db4d148191a6288a6234c60e97`). Its native conversation UI still requires acceptance testing.
 
-Claude Code 2.1.300 reports not signed in. A signed-in claude.ai web page does not establish CLI authentication. Complete `claude auth login` in your terminal, then verify `/mcp` before testing tools.
+Claude Code 2.1.300 authenticated and passed live tool acceptance on 14 October 2026: frame 4 showed 1–0, frame 5 showed 0–0, and revised goal evidence resolved. Terminal tool use is verified; graphical UI remains available in the web app.
 
 GitHub Copilot CLI 1.0.98 reached the organization account but explicitly blocked third-party MCP servers through organization policy. This is an unresolved host policy gate, not a successful integration test. Ask the administrator about approved MCP access; do not bypass the restriction. Consumer Copilot, Copilot Studio and GitHub Copilot are different hosts.

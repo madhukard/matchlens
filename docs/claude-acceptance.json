@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-14",
+  "client": "Claude Code 2.1.300",
+  "endpoint": "https://matchlens-dev.redforest-787f42f7.westus2.azurecontainerapps.io/mcp",
+  "calls": [
+    {
+      "name": "mcp__matchlens__get_live_match",
+      "input": {
+        "frame": 4
+      }
+    },
+    {
+      "name": "mcp__matchlens__get_live_match",
+      "input": {
+        "frame": 5
+      }
+    },
+    {
+      "name": "mcp__matchlens__get_live_evidence",
+      "input": {
+        "evidence_ids": [
+          "finish-4@1",
+          "finish-4@2"
+        ],
+        "frame": 5,
+        "run_id": "c34edcdf-2daa-4bcc-a7b4-7ef3a0c052a1"
+      }
+    },
+    {
+      "name": "mcp__matchlens__get_live_evidence",
+      "input": {
+        "evidence_ids": [
+          "finish-4@2"
+        ],
+        "frame": 5
+      }
+    }
+  ],
+  "permission_denials": [],
+  "result": "Harbor led 1\u20130 at frame 4, then the goal was voided and frame 5 shows 0\u20130. One note on the request: the tool has no `frame_index` parameter. It's called `frame`, so I passed `frame=4` and `frame=5`. This is a synthetic fixture (Harbor FC vs Summit United, `harbor-live`), not real match data.\n\n## Scores\n\n| Frame | Window (s) | Revision | Harbor | Summit | Voided goals |\n|---|---|---|---|---|---|\n| 4 | 3300\u20133600 | 23 | **1** | 0 | 0 |\n| 5 | 3300\u20133660 | 29 | **0** | 0 | 1 |\n\n- **Frame 4:** Harbor's score comes from one event, `finish-4@1` (H9, goal at second 3578, `void: false`). The narrative headline is \"Harbor leads Summit 1\u20130.\"\n- **Frame 5:** The same goal comes back as revision 2, `finish-4@2`, now marked `void: true`. Nothing supports either team's score, and `corrections.void_goals = 1` points to `finish-4@2`. The headline is \"Goal voided; Harbor and Summit level at 0\u20130.\"\n\n## Correction evidence\nI checked this with `get_live_evidence` (run `c34edcdf\u2026`, frame 5, revision 29, evidence hash `164d1d5a\u20260cc0`). It returned `finish-4@2`: revision 2, second 3578, Harbor, H9, kind `goal`, from (92, 33) to (105, 34), `successful: true`, **`void: true`**.\n\nApart from the void flag, it's the same event as `finish-4@1` in frame 4: same second, player, location and possession (`move-4`). So the goal was corrected, not removed from the record. The data doesn't say why it was voided, and the insight itself notes \"reason for the correction is not supplied.\"\n\nMy first evidence request asked for `finish-4@1` and `finish-4@2` together at frame 5, and it errored. That's probably because revision 1 is no longer current at frame 5. Requesting `finish-4@2` alone worked. The revision-1 record shown above comes from frame 4's own output.\n\n## Other changes from frame 4 to frame 5\n- Frame 5 adds Harbor's move-5 (seconds 3601\u20133622): pressure `press-5@1`, recovery `recover-5@1`, and passes `p-5-0/1/2@1`. Harbor's totals go from 6 to 9 passes and from 2 to 3 high recoveries. The move doesn't end in a shot.\n- Harbor's shot count drops from 2 to 1 because the voided goal no longer counts. The remaining shot is `finish-3@1`, which missed.\n- Both frames show `frame_status: approved` and all four workflow agents completed."
+}

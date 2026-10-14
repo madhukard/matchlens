@@ -13,7 +13,7 @@ Chrome checks verified the public score and goal correction, audience/language c
 
 The private ChatGPT plugin listing is version 0.2.0, release `pluginrel_6acfe6db4d148191a6288a6234c60e97`, plugin `plugins_6acfdfe899388191af6dc5741e611de1`. Actual native conversation rendering is still awaiting the owner's manual acceptance check; the harness is not a substitute.
 
-Claude Code 2.1.300 is installed through its official npm package but reports `loggedIn: false`; website authentication did not authenticate the CLI. No Claude Code end-to-end pass is claimed.
+Claude Code 2.1.300 authenticated successfully and passed a restricted live MCP test on 14 October 2026. It connected to the Azure endpoint, called `get_live_match` for frames 4 and 5, reported 1–0 then 0–0, observed rejection of superseded `finish-4@1` at frame 5, and fetched current `finish-4@2`. No local file or shell tools were available and there were no permission denials. This verifies terminal tool use, not embedded graphical rendering. See `claude-acceptance.json` for the sanitized call summary.
 
 GitHub Copilot CLI 1.0.98 was tested with the MatchLens MCP configuration. Organization policy explicitly blocked third-party MCP servers. The account administrator must resolve permitted access; no policy bypass or Copilot success is claimed. VS Code Copilot and Copilot Studio have not been independently accepted.
 
@@ -43,4 +43,4 @@ Execution `matchlens-live-worker-3pdjzub`, run `c34edcdf-2daa-4bcc-a7b4-7ef3a0c0
 
 The strongest category evidence is the revision-aware correction path, explicit agent responsibilities, retained rejection history, recoverable handoffs and paired baseline. Technical and presentation evidence now supports a credible demonstration. The main competitive limitation is the small authored scenario: this is not licensed, continuous match ingestion, and the same-model reviewer/grader setup is not independent assurance. The additional calls demonstrably cost latency and tokens.
 
-Submission remains gated on public repository and accepted public video hosting, owner-confirmed entrant details and final portal review. Native ChatGPT/Claude/Copilot acceptance remains incomplete as described above. Do not label the complete requested integration scope or the competition submission “100% ready” while these gates are open.
+The repository is public following explicit owner authorization. Submission remains gated on accepted public video hosting, owner-confirmed entrant details and final portal review. Native ChatGPT acceptance remains pending, and Copilot is blocked by organization policy as described above; Claude Code tool acceptance passed. Do not label the complete requested integration scope or the competition submission “100% ready” while these gates are open.

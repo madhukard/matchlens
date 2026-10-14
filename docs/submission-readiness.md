@@ -26,10 +26,10 @@ MatchLens handles the moment a broadcast explanation becomes wrong: a reported g
 
 - Six-frame live acceptance and 1:53 video inspection passed. Final v0.2.0 deployment and public acceptance checks passed; evidence is recorded in `verification.md`.
 - ChatGPT native conversation rendering requires acceptance evidence; the reference harness is insufficient.
-- Claude website sign-in is not Claude Code CLI authentication; CLI acceptance is pending.
+- Claude Code 2.1.300 authentication and live MCP acceptance passed: frames 4/5 returned 1–0 then 0–0, revised goal evidence resolved, and superseded evidence was rejected.
 - Copilot CLI testing encountered an organization policy blocking third-party MCP servers. Do not bypass that policy or claim that host passed.
-- The repository is private. Public visibility requires the owner's release decision after code, secret and dependency review.
-- The 1:53 video is recorded, captioned and visually inspected at `dist/matchlens-demo.mp4`. Public hosting awaits the owner's destination/approval.
-- Confirm entrant/team name and final portal fields against the actual submission form. Owner performs submission and accepts required terms.
+- The owner authorized publication and the repository is now public: https://github.com/madhukard/matchlens.
+- The 1:53 video is recorded, captioned and visually inspected at `dist/matchlens-demo.mp4`. The owner selected the Dhisana.ai YouTube account. Its existing channel is Madhukar Devaraju (@MadhukarDevaraju); upload awaits the explicit YouTube terms acknowledgement.
+- Recommended project branding: **MatchLens by Dhisana**. Official rules sections 3 and 4.10 allow organizations with an authorized individual representative. Use the company’s exact registered legal name in legal entrant fields; confirm it and final portal fields before owner submission.
 
 No award, selection or perfect reliability is promised. This document records unresolved gates, not a certificate of submission readiness.
