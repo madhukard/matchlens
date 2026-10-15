@@ -6,7 +6,7 @@
     ],
     "category": "Productivity",
     "composerIcon": "./assets/icon.svg",
-    "defaultPrompt": "Show the MatchLens demo and explain the 55–65 minute window.",
+    "defaultPrompt": "Show the MatchLens goal-correction demo. Use get_live_match with frame=4, audience=\"fan\", language=\"en\", then frame=5 with the same settings. Show the interactive view and explain why the synthetic match score changes from 1–0 to 0–0, using the revised goal evidence.",
     "developerName": "Madhukar D",
     "displayName": "MatchLens",
     "logo": "./assets/icon.svg",
@@ -14,7 +14,7 @@
     "shortDescription": "See the story behind the score"
   },
   "name": "matchlens",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Explore synthetic football matches with evidence-linked narratives and an interactive pitch.",
   "author": {
     "name": "Madhukar D",
