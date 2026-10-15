@@ -5,7 +5,7 @@ SUB="${MATCHLENS_SUBSCRIPTION:?Set the MatchLens subscription}"
 RG=matchlens-dev-rg
 REGISTRY=matchlensdev1f5dc8
 TAG="${MATCHLENS_IMAGE_TAG:?Set a unique image tag}"
-MIN_REPLICAS="${MATCHLENS_MIN_REPLICAS:-0}"
+MIN_REPLICAS="${MATCHLENS_MIN_REPLICAS:-1}"
 [[ "$SUB" == "1f5dc845-2e4c-4a7b-881e-36b5cf032ebb" ]] || { echo 'Wrong subscription'; exit 1; }
 "$AZ" deployment group create --subscription "$SUB" -g "$RG" -n matchlens-live -f infra/live.bicep --only-show-errors -o none
 IDENTITY=$("$AZ" identity show --subscription "$SUB" -g "$RG" -n matchlens-dev-runtime --query id -o tsv)

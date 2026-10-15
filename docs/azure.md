@@ -8,7 +8,7 @@ Resources:
 - `matchlensdev1f5dc8`: Basic Container Registry, admin password disabled.
 - `matchlens-dev-runtime`: managed identity with AcrPull on the new registry and Blob Data Reader on the private run container.
 - `matchlens-dev-env-west`: consumption Container Apps environment in westus2.
-- `matchlens-dev`: HTTPS app, 0–1 replica, 0.25 CPU and 0.5 GiB RAM. Contains saved demo artifacts, no model credentials.
+- `matchlens-dev`: HTTPS app, 1 replica, 0.25 CPU and 0.5 GiB RAM. Contains saved demo artifacts, no model credentials.
 
 `infra/platform.bicep`, `infra/app.bicep` and `infra/ai.bicep` describe the resources. `scripts/deploy.sh` rebuilds the serving image and updates only the new resource group. The AI template is separate because normal web deployments should not change model deployments. Region/model quota must be available.
 
@@ -22,11 +22,11 @@ Regenerate and review `matchlens/data/insights.json` before rebuilding when the 
 
 ## Costs and access
 
-No monthly budget amount was supplied, so no arbitrary budget or hard spending cap is claimed. Scale-to-zero and a single-replica limit constrain serving costs but are **not spending caps**. ACR has a recurring Basic charge; builds, model generation, network egress and active compute may incur charges. The model is pay-per-token GlobalStandard, not provisioned throughput. Set a resource-group budget and alerts once the owner chooses an amount; Azure budget alerts themselves do not stop spending.
+No monthly budget amount was supplied, so no arbitrary budget or hard spending cap is claimed. A single-replica limit constrains serving costs but are **not spending caps**. ACR has a recurring Basic charge; builds, model generation, network egress and active compute may incur charges. The model is pay-per-token GlobalStandard, not provisioned throughput. Set a resource-group budget and alerts once the owner chooses an amount; Azure budget alerts themselves do not stop spending.
 
 The public `/mcp` and preview expose fictional demo data only. Tools cannot invoke paid models, write files, fetch arbitrary URLs or change infrastructure. Do not add private match feeds or customer records until OAuth and per-user authorization are implemented. Browser UI uses host MCP calls rather than exposing Azure credentials. MCP requests retain allowed-host and origin validation.
 
-For rollback, redeploy `infra/app.bicep` with a previously tested immutable image tag. Health is `/health`; MCP is `/mcp`. A cold start is possible at zero replicas. To retire the demo, review and remove only `matchlens-dev-rg` through your normal Azure process; never run cleanup against a Dhisana group.
+For rollback, redeploy `infra/app.bicep` with a previously tested immutable image tag. Health is `/health`; MCP is `/mcp`. The serving minimum is now one replica after native ChatGPT discovery timed out with scale-to-zero. This uses ongoing compute/idle capacity under the existing Azure plan; it is not free and has no automatic expiry. The operator can explicitly return the minimum to zero after judging. To retire the demo, review and remove only `matchlens-dev-rg` through your normal Azure process; never run cleanup against a Dhisana group.
 
 The initial eastus serving environment remained queued and was retired after westus2 provisioned successfully. The 14 October resource inventory no longer lists the unused eastus environment. This was contained within the new MatchLens resource group.
 

@@ -48,3 +48,9 @@ The repository is public following explicit owner authorization. The [1:53 demo 
 ## Readiness recheck
 
 On 14 October 2026 the public six-frame / 24-variant check and the nine-tool MCP smoke test passed again. The first live check timed out during a container start from zero replicas; Azure system logs recorded startup probe failures followed by successful serving. The retry passed without infrastructure changes. This cold-start limitation is disclosed in the judge guide. No application image or Dhisana production resource changed during this evaluation/documentation pass.
+
+## Native ChatGPT timeout investigation — 14 October 2026
+
+The owner’s screenshot showed two configured-service timeouts before tool availability. The plugin’s stored Streamable HTTP endpoint matches the deployed `/mcp` URL. Azure logs independently showed activation from zero replicas and container startup. The serving minimum was changed to one existing replica, with deployment defaults updated to preserve it. This addresses the observed cold-start path; native rendering remains unverified until the owner retries in a new ChatGPT conversation. The screenshot used the original 55–65 minute starter prompt, which is separate from the frame 4/5 live correction test.
+
+After the configuration change, public health returned HTTP 200 in 0.15 seconds and a fresh MCP client initialized and discovered all nine tools in 0.39 seconds. Frame 4 returned 1–0 and frame 5 returned 0–0; the full six-frame/24-variant check and 63 local tests passed. These measurements are point-in-time protocol checks, not native ChatGPT acceptance.

@@ -7,7 +7,8 @@ param publicHost string
 param appName string = 'matchlens-dev'
 param storageUrl string = ''
 param clientId string = ''
-param minReplicas int = 0
+// Keep MCP discovery available without a scale-from-zero startup delay.
+param minReplicas int = 1
 resource app 'Microsoft.App/containerApps@2025-01-01' = {
   name: appName
   location: location

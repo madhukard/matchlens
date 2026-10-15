@@ -2,7 +2,7 @@
 
 [Open the match room](https://matchlens-dev.redforest-787f42f7.westus2.azurecontainerapps.io) · [Watch the demo](https://www.youtube.com/watch?v=qdtIEEIp8bE) · [Source](https://github.com/madhukard/matchlens)
 
-No account, API key or payment is needed for the browser demo. All match events and teams are fictional. The public view reads a saved, reviewed Azure run; opening it does not start model generation. If the service is waking from zero replicas, the first request can be slow; retry once after it starts.
+No account, API key or payment is needed for the browser demo. All match events and teams are fictional. The public view reads a saved, reviewed Azure run; opening it does not start model generation. One serving replica is kept running to avoid scale-from-zero delays during tool discovery.
 
 1. Select moment 5, **Goal reported**. Harbor leads 1–0.
 2. Select moment 6, **Goal corrected**. The score returns to 0–0. Open **Show me why** to inspect the revised goal.
